@@ -1,0 +1,31 @@
+{
+  "id": "cust_0001",
+  "fullName": "Jordan Alex Rivera",
+  "nameVariants": ["Jordan Rivera", "Jordan A. Rivera", "J. Rivera", "Jordan Riveira"],
+  "dob": "1989-04-17",
+  "emails": ["jordan.rivera@example.com", "jrivera.work@example.com"],
+  "verificationEmail": "vanish-optouts+jordan@example.com",
+  "phones": ["+14155550137", "+14155550199"],
+  "addresses": [
+    {
+      "street": "742 Larkspur Lane",
+      "city": "Austin",
+      "state": "TX",
+      "zip": "78701",
+      "current": true
+    },
+    {
+      "street": "118 Cedar Hollow Rd",
+      "city": "Denver",
+      "state": "CO",
+      "zip": "80202",
+      "current": false
+    }
+  ],
+  "relatives": ["Maria", "Carlos", "Elena"],
+  "authorization": {
+    "agreed": true,
+    "signedName": "Jordan Alex Rivera",
+    "signedAt": "2026-06-21T12:00:00.000Z"
+  }
+}

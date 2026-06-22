@@ -1,0 +1,41 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env files — NEVER commit secrets
+.env
+.env*.local
+.env.production
+
+# typescript
+*.tsbuildinfo
+
+# removal engine artifacts (contain customer PII — never commit)
+/engine/screenshots/
+/engine/output/
+/engine/profile.json
+/engine/profiles/
+/engine/node_modules/
+# customer run screenshots served by the app (contain PII — never commit)
+/public/runs/
+# customer contact data + email-sent markers (PII — never commit)
+/data/
+.vercel

@@ -1,0 +1,14 @@
+{
+  "name": "vanish-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VANISH data-broker removal engine. Drives a real headed Chromium browser through each broker's free opt-out form, screenshots every step as proof, pauses for human-only gates (CAPTCHA / SMS / email links), and logs a structured RunResult the dashboard reads.",
+  "type": "module",
+  "scripts": {
+    "erase": "node src/run.mjs",
+    "selftest": "node src/run.mjs --selftest"
+  },
+  "dependencies": {
+    "playwright": "1.60.0"
+  }
+}

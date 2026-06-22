@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ─── Design tokens (dark security-luxury direction) ─── */
+@theme {
+  --color-ink: oklch(14% 0.012 264);
+  --color-ink-soft: oklch(18% 0.014 264);
+  --color-ink-raise: oklch(22% 0.016 264);
+  --color-line: oklch(30% 0.012 264);
+  --color-bone: oklch(96% 0.008 96);
+  --color-muted: oklch(66% 0.012 264);
+  --color-safe: oklch(80% 0.16 158);
+  --color-exposed: oklch(66% 0.2 26);
+  --color-amber: oklch(82% 0.15 80);
+
+  --font-display: var(--font-display), Georgia, serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --text-hero: clamp(2.75rem, 1rem + 7vw, 7rem);
+  --text-section: clamp(1.9rem, 1rem + 3vw, 3.5rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-safe);
+    color: var(--color-ink);
+  }
+}
+
+/* Subtle film grain / atmosphere */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Redaction sweep used in the hero */
+@keyframes redact {
+  0% { transform: scaleX(0); transform-origin: left; }
+  55% { transform: scaleX(1); transform-origin: left; }
+  60% { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(1); transform-origin: right; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise 0.8s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .grain::before { animation: none; }
+  html { scroll-behavior: auto; }
+}
