@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VANISH — The Privacy Standard for Professionals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0D1B2A;
+      --navy-light: #122133;
+      --navy-mid:   #1A2E45;
+      --white:      #FFFFFF;
+      --warm-white: #F5F0E8;
+      --gold:       #B5830A;
+      --gold-light: #D4A017;
+      --gray:       #94A3B8;
+      --teal:       #0F766E;
+      --border:     rgba(181,131,10,0.25);
+
+      --playfair: 'Playfair Display', Georgia, serif;
+      --sans: 'Source Sans 3', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── UTILITIES ── */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 40px; }
+    .section { padding: 96px 0; }
+    .section--warm { background: var(--warm-white); color: var(--navy); }
+    .section--white { background: var(--white); color: var(--navy); }
+    .section--navy-mid { background: var(--navy-mid); }
+    .eyebrow {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 28px 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--navy);
+      border-bottom: 1px solid rgba(181,131,10,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .nav-logo {
+      font-family: var(--playfair);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--white);
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .btn-gold {
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      padding: 10px 24px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 10px 24px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--white); }
+    .btn-ghost--navy {
+      color: var(--navy);
+      border-color: rgba(13,27,42,0.35);
+    }
+    .btn-ghost--navy:hover { border-color: var(--navy); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      padding: 100px 0 80px;
+      border-bottom: 1px solid rgba(181,131,10,0.15);
+    }
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .hero h1 {
+      font-family: var(--playfair);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+    .hero-body {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 17px;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .hero-disclaimer {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--gray);
+      opacity: 0.7;
+    }
+    .hero-image-wrap {
+      position: relative;
+    }
+    .hero-image-frame {
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-image-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(13,27,42,0.4) 100%);
+      z-index: 1;
+    }
+    .hero-image-frame img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(15%) contrast(1.05);
+    }
+    .hero-badge {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      background: var(--gold);
+      padding: 14px 20px;
+      z-index: 2;
+      text-align: center;
+    }
+    .hero-badge-number {
+      font-family: var(--playfair);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+    }
+    .hero-badge-label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hero-corner-accent {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      width: 40px;
+      height: 40px;
+      border-top: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+    }
+
+    /* ── PRESS STRIP ── */
+    .press-strip {
+      background: var(--navy-light);
+      padding: 32px 0;
+      border-top: 1px solid rgba(181,131,10,0.12);
+      border-bottom: 1px solid rgba(181,131,10,0.12);
+    }
+    .press-strip .container {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .press-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray);
+      white-space: nowrap;
+      margin-right: 40px;
+      flex-shrink: 0;
+    }
+    .press-names {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+    .press-name {
+      font-family: var(--playfair);
+      font-style: italic;
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      padding: 0 32px;
+      border-right: 1px solid rgba(255,255,255,0.12);
+      white-space: nowrap;
+    }
+    .press-name:first-child { padding-left: 0; }
+    .press-name:last-child { border-right: none; }
+
+    /* ── THE PROBLEM ── */
+    .problem-section { padding: 96px 0; }
+    .problem-section .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+    .problem-section h2 {
+      font-family: var(--playfair);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--navy);
+      margin-bottom: 28px;
+    }
+    .problem-section p {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+    .problem-image-wrap { position: relative; }
+    .problem-image-frame {
+      border: 1px solid rgba(13,27,42,0.15);
+      overflow: hidden;
+    }
+    .problem-image-frame img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.05);
+    }
+    .problem-caption {
+      font-family: var(--sans);
+      font-style: italic;
+      font-size: 13px;
+      color: #6B7280;
+      margin-top: 12px;
+      line-height: 1.5;
+      border-left: 2px solid var(--gold);
+      padding-left: 12px;
+    }
+    .problem-stat-callout {
+      background: var(--navy);
+      color: var(--white);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      border-left: 3px solid var(--gold);
+    }
+    .problem-stat-callout p {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 0;
+    }
+
+    /* ── WHO USES ── */
+    .who-uses { padding: 96px 0; }
+    .who-uses .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .who-uses h2 {
+      font-family: var(--playfair);
+      font-size: 13px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gray);
+      margin-bottom: 32px;
+      letter-spacing: 0.04em;
+    }
+    .client-type {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .client-type:first-of-type { border-top: 1px solid rgba(255,255,255,0.08); }
+    .client-arrow {
+      font-family: var(--sans);
+      font-size: 18px;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+    .client-title {
+      font-family: var(--playfair);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .client-desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+    .who-portraits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .portrait-img {
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .portrait-img img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      filter: grayscale(10%) contrast(1.05);
+      transition: filter 0.3s;
+    }
+    .portrait-img img:hover { filter: grayscale(0%) contrast(1.08); }
+
+    /* ── PROCESS ── */
+    .process-section { padding: 96px 0; }
+    .process-section h2 {
+      font-family: var(--playfair);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .process-section .section-intro {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 300;
+      color: #4B5563;
+      margin-bottom: 56px;
+      max-width: 560px;
+    }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+    .process-step { position: relative; }
+    .step-number {
+      font-family: var(--playfair);
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+    .step-roman {
+      font-style: italic;
+    }
+    .step-title {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .step-body {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: #4B5563;
+      line-height: 1.7;
+    }
+    .process-guarantee {
+      background: var(--navy);
+      color: var(--white);
+      padding: 20px 28px;
+      margin-bottom: 48px;
+      border-left: 3px solid var(--gold);
+      display: inline-block;
+    }
+    .process-guarantee p {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.85);
+    }
+    .process-guarantee strong {
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .process-image-frame {
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .process-image-frame img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+      filter: grayscale(10%) contrast(1.05);
+    }
+
+    /* ── STATS ── */
+    .stats-section { padding: 96px 0; }
+    .stats-section h3 {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gray);
+      text-align: center;
+      margin-bottom: 64px;
+      letter-spacing: 0.04em;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 40px 24px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: var(--playfair);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .stat-plus { color: var(--gold); font-size: 40px; }
+    .stat-caption {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section { padding: 96px 0; }
+    .testimonials-section h2 {
+      font-family: var(--playfair);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .testimonials-section .section-intro {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: #6B7280;
+      margin-bottom: 52px;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border-left: 3px solid var(--gold);
+      padding: 32px 28px;
+      border: 1px solid rgba(13,27,42,0.08);
+      border-left: 3px solid var(--gold);
+    }
+    .testimonial-photo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 2px solid var(--gold);
+    }
+    .testimonial-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .testimonial-quote {
+      font-family: var(--playfair);
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .testimonial-quote::before { content: '\201C'; color: var(--gold); }
+    .testimonial-quote::after { content: '\201D'; color: var(--gold); }
+    .testimonial-byline {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .testimonial-role {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: #9CA3AF;
+      margin-top: 2px;
+    }
+
+    /* ── COMPLIANCE ── */
+    .compliance-section { padding: 80px 0; }
+    .compliance-section h2 {
+      font-family: var(--playfair);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .compliance-section .section-intro {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: #6B7280;
+      margin-bottom: 48px;
+    }
+    .trust-badges {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+    .trust-badge {
+      border: 1px solid rgba(13,27,42,0.12);
+      padding: 24px 16px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .trust-badge:hover { border-color: var(--gold); }
+    .badge-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .badge-icon svg { width: 32px; height: 32px; }
+    .badge-title {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .badge-sub {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: #9CA3AF;
+    }
+
+    /* ── PRICING ── */
+    .pricing-section { padding: 96px 0; }
+    .pricing-section h2 {
+      font-family: var(--playfair);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .pricing-section .section-intro {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: #6B7280;
+      margin-bottom: 52px;
+    }
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--sans);
+    }
+    .pricing-table thead tr {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .pricing-table thead th {
+      padding: 18px 24px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .pricing-table thead th:first-child {
+      font-family: var(--playfair);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 15px;
+      color: var(--gray);
+    }
+    .pricing-table thead th.popular-col {
+      background: var(--gold);
+      position: relative;
+    }
+    .popular-tag {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      font-weight: 400;
+      margin-bottom: 2px;
+    }
+    .pricing-table tbody tr:nth-child(odd) { background: var(--warm-white); }
+    .pricing-table tbody tr:nth-child(even) { background: #FFFDF7; }
+    .pricing-table tbody tr:hover { background: #EDE9DF; }
+    .pricing-table tbody td {
+      padding: 14px 24px;
+      font-size: 14px;
+      color: #374151;
+      border-bottom: 1px solid rgba(13,27,42,0.06);
+    }
+    .pricing-table tbody td:first-child {
+      font-weight: 400;
+      color: var(--navy);
+    }
+    .pricing-table tbody td.featured {
+      background: rgba(181,131,10,0.08);
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .check { color: var(--teal); font-weight: 700; }
+    .dash { color: #D1D5DB; }
+    .pricing-table tfoot tr { background: var(--navy); color: var(--white); }
+    .pricing-table tfoot td {
+      padding: 20px 24px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+    .pricing-table tfoot td.featured { background: var(--gold); }
+    .price-large {
+      font-family: var(--playfair);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+    }
+    .price-per {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 3px;
+      display: block;
+    }
+    .cta-cell .btn-gold {
+      font-size: 13px;
+      padding: 10px 20px;
+      display: inline-block;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: var(--navy);
+      padding: 96px 0;
+      text-align: center;
+      border-top: 1px solid rgba(181,131,10,0.2);
+    }
+    .final-cta h2 {
+      font-family: var(--playfair);
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--white);
+      max-width: 700px;
+      margin: 0 auto 32px;
+      line-height: 1.15;
+    }
+    .final-cta h2 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .final-cta .cta-sub {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--gray);
+      margin-top: 20px;
+    }
+    .final-cta .cta-sub span {
+      margin: 0 10px;
+      opacity: 0.4;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080F17;
+      padding: 40px 0 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: var(--playfair);
+      font-weight: 700;
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+    .footer-copy {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="container">
+    <a href="/start?ref=authority" class="nav-logo">VANISH</a>
+    <ul class="nav-links">
+      <li><a href="/start?ref=authority">How It Works</a></li>
+      <li><a href="/start?ref=authority">Coverage</a></li>
+      <li><a href="/start?ref=authority">Who We Serve</a></li>
+      <li><a href="/start?ref=authority">Pricing</a></li>
+      <li><a href="/start?ref=authority">Sign In</a></li>
+      <li><a href="/start?ref=authority" class="btn-gold">Get Protected</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-left">
+      <div class="eyebrow">The Privacy Standard for Professionals</div>
+      <h1>Your personal data is a liability. We eliminate it.</h1>
+      <p class="hero-body">
+        VANISH is used by executives, journalists, attorneys, and public figures who cannot afford their personal data to be publicly available. We remove your information from 484 databases, permanently and verifiably.
+      </p>
+      <div class="hero-ctas">
+        <a href="/start?ref=authority" class="btn-gold">Request a Free Audit</a>
+        <a href="/start?ref=authority" class="btn-ghost">View Coverage</a>
+      </div>
+      <p class="hero-disclaimer">No long-term contracts. Month-to-month available.</p>
+    </div>
+    <div class="hero-image-wrap">
+      <div class="hero-corner-accent"></div>
+      <div class="hero-image-frame">
+        <img
+          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80"
+          alt="Professional executive"
+          loading="eager"
+        />
+        <div class="hero-badge">
+          <span class="hero-badge-number">12,000+</span>
+          <span class="hero-badge-label">Professionals Protected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRESS STRIP ── -->
+<section class="press-strip">
+  <div class="container">
+    <span class="press-label">Reported on by:</span>
+    <div class="press-names">
+      <span class="press-name">The Wall Street Journal</span>
+      <span class="press-name">Forbes</span>
+      <span class="press-name">The New York Times</span>
+      <span class="press-name">WIRED</span>
+      <span class="press-name">The Guardian</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── THE PROBLEM ── -->
+<section class="section section--warm problem-section">
+  <div class="container">
+    <div class="problem-left">
+      <div class="eyebrow" style="color:var(--gold);">The Data Broker Problem</div>
+      <h2>The data broker industry generates $197 billion annually — from selling your information.</h2>
+      <div class="divider" style="background:var(--gold);"></div>
+      <div class="problem-stat-callout">
+        <p>Your home address, phone number, salary range, court records, and relatives' names are available for purchase on over 484 commercial databases — most of which you have never heard of and did not consent to.</p>
+      </div>
+      <p>Data brokers acquire personal information from public records, social media, purchase histories, and third-party aggregators. They package and resell this data to marketers, employers, insurers, and anyone willing to pay — including bad actors.</p>
+      <p>The legal framework governing data brokers remains fragmented. While CCPA and GDPR provide some remedies, exercising opt-out rights across hundreds of brokers requires sustained, technical, and legally precise effort that most individuals lack the time or expertise to execute.</p>
+      <p>For executives, journalists, attorneys, and public figures, the risk is not hypothetical. The consequences of exposed personal data range from targeted harassment to physical security threats.</p>
+    </div>
+    <div class="problem-image-wrap">
+      <div class="problem-image-frame">
+        <img
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80"
+          alt="Business professionals in meeting"
+          loading="lazy"
+        />
+      </div>
+      <p class="problem-caption">The data broker industry operates largely without public awareness or meaningful regulation. Most professionals discover their exposure only after an incident occurs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHO USES VANISH ── -->
+<section class="section who-uses">
+  <div class="container">
+    <div class="who-left">
+      <div class="eyebrow">Client Profile</div>
+      <h2 style="font-family: var(--sans); font-size: 13px; font-style: italic; color: var(--gray); margin-bottom: 32px; font-weight: 400;">Our clients include:</h2>
+
+      <div class="client-type">
+        <span class="client-arrow">↗</span>
+        <div>
+          <div class="client-title">C-Suite Executives</div>
+          <p class="client-desc">Who cannot have their home address, family members' names, or daily movements searchable by anyone with a browser and fifteen dollars.</p>
+        </div>
+      </div>
+
+      <div class="client-type">
+        <span class="client-arrow">↗</span>
+        <div>
+          <div class="client-title">Investigative Journalists</div>
+          <p class="client-desc">Protecting their identity and that of their families while reporting on subjects with resources and motivation to retaliate.</p>
+        </div>
+      </div>
+
+      <div class="client-type">
+        <span class="client-arrow">↗</span>
+        <div>
+          <div class="client-title">Attorneys & Partners</div>
+          <p class="client-desc">Safeguarding client confidentiality and personal security in high-stakes litigation where opposing parties may use personal data as leverage.</p>
+        </div>
+      </div>
+
+      <div class="client-type">
+        <span class="client-arrow">↗</span>
+        <div>
+          <div class="client-title">Public Figures</div>
+          <p class="client-desc">Managing their digital footprint with precision — ensuring only information they have chosen to make public remains accessible.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="who-right">
+      <div class="who-portraits">
+        <div class="portrait-img">
+          <img
+            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80"
+            alt="Executive professional"
+            loading="lazy"
+          />
+        </div>
+        <div class="portrait-img">
+          <img
+            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
+            alt="Executive professional"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── THE VANISH PROCESS ── -->
+<section class="section section--warm process-section">
+  <div class="container">
+    <div class="eyebrow" style="color:var(--gold);">Methodology</div>
+    <h2>The VANISH Process</h2>
+    <p class="section-intro">A systematic, legally compliant approach to eliminating your data from commercial databases.</p>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number"><span class="step-roman">I.</span></div>
+        <div class="step-title">Full Exposure Audit</div>
+        <p class="step-body">We conduct a comprehensive audit of your data exposure across all 484 brokers in our database, generating a detailed report of every instance of your personal information currently available for purchase.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number"><span class="step-roman">II.</span></div>
+        <div class="step-title">Opt-Out & Deletion</div>
+        <p class="step-body">We submit legally compliant opt-out and deletion requests on your behalf, using the precise formats and verification procedures each broker requires. Our team manages all correspondence.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number"><span class="step-roman">III.</span></div>
+        <div class="step-title">Verification & Monitoring</div>
+        <p class="step-body">We verify each removal with documented confirmation, then monitor all 484 databases quarterly. When brokers re-list your data — and they will attempt to — we remove it again automatically.</p>
+      </div>
+    </div>
+
+    <div class="process-guarantee">
+      <p>Most clients see their first verified removal within <strong>72 hours</strong> of engagement. Full clearance across all databases averages <strong>31 days</strong>.</p>
+    </div>
+
+    <div class="process-image-frame">
+      <img
+        src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80"
+        alt="Professional at desk working"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- ── VERIFIED RESULTS ── -->
+<section class="section stats-section">
+  <div class="container">
+    <div class="eyebrow" style="justify-content: center; text-align: center;">Verified Client Statistics</div>
+    <h3>Our clients' verified removal statistics — independently audited.</h3>
+
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">484<span class="stat-plus">+</span></span>
+        <span class="stat-caption">Databases Covered</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">311</span>
+        <span class="stat-caption">Avg. Opt-Outs Per Client</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">98<span class="stat-plus">%</span></span>
+        <span class="stat-caption">Verified Removal Rate</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">72<span style="font-size:32px; color: var(--gold);">hr</span></span>
+        <span class="stat-caption">Time to First Removal</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="section section--warm testimonials-section">
+  <div class="container">
+    <div class="eyebrow" style="color:var(--gold);">Client Accounts</div>
+    <h2>What our clients say</h2>
+    <p class="section-intro">Due to the sensitive nature of our service, clients are identified by initial and title only. This is consistent with the privacy standards we uphold.</p>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-photo">
+          <img
+            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&q=80"
+            alt="Client"
+            loading="lazy"
+          />
+        </div>
+        <p class="testimonial-quote">In my position, having my home address on people-search sites was a genuine security risk. VANISH resolved it completely within 30 days and continues to suppress re-listings without any effort on my part.</p>
+        <div class="testimonial-byline">M.T.</div>
+        <div class="testimonial-role">Chief Executive Officer — New York, NY</div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-photo">
+          <img
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80"
+            alt="Client"
+            loading="lazy"
+          />
+        </div>
+        <p class="testimonial-quote">I cover national security stories. The idea that anyone could find my address in thirty seconds was untenable. VANISH brought that exposure to near-zero. Their reporting is thorough and the documentation is excellent.</p>
+        <div class="testimonial-byline">S.L.</div>
+        <div class="testimonial-role">Senior Investigative Journalist — Washington, DC</div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-photo">
+          <img
+            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80"
+            alt="Client"
+            loading="lazy"
+          />
+        </div>
+        <p class="testimonial-quote">As a partner at a firm handling high-stakes litigation, data security extends to my personal footprint. VANISH handled the process with the same professionalism I expect from any service provider I retain.</p>
+        <div class="testimonial-byline">R.K.</div>
+        <div class="testimonial-role">Partner, Litigation — Chicago, IL</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMPLIANCE ── -->
+<section class="section section--white compliance-section">
+  <div class="container">
+    <div class="eyebrow" style="color:var(--gold);">Security & Compliance</div>
+    <h2>Built on verifiable standards</h2>
+    <p class="section-intro">Our infrastructure and practices are designed to meet the highest standards for data security and regulatory compliance.</p>
+
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <div class="badge-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3L5 8v8c0 6.6 4.7 12.8 11 14.3C22.3 28.8 27 22.6 27 16V8L16 3z" stroke="#B5830A" stroke-width="1.5" fill="none"/>
+            <path d="M11 16l3.5 3.5L21 12" stroke="#0F766E" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge-title">CCPA Compliant</div>
+        <div class="badge-sub">California Privacy Act</div>
+      </div>
+
+      <div class="trust-badge">
+        <div class="badge-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="22" height="22" rx="2" stroke="#B5830A" stroke-width="1.5"/>
+            <path d="M10 16h12M16 10v12" stroke="#0F766E" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge-title">GDPR Framework</div>
+        <div class="badge-sub">EU Data Regulation</div>
+      </div>
+
+      <div class="trust-badge">
+        <div class="badge-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="11" stroke="#B5830A" stroke-width="1.5"/>
+            <path d="M16 10v6l4 2" stroke="#0F766E" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge-title">SOC 2 Certified</div>
+        <div class="badge-sub">In Progress — Type II</div>
+      </div>
+
+      <div class="trust-badge">
+        <div class="badge-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="13" width="16" height="12" rx="1.5" stroke="#B5830A" stroke-width="1.5"/>
+            <path d="M11 13v-3a5 5 0 0110 0v3" stroke="#0F766E" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="16" cy="19" r="1.5" fill="#B5830A"/>
+          </svg>
+        </div>
+        <div class="badge-title">256-bit Encryption</div>
+        <div class="badge-sub">AES-256 at Rest & Transit</div>
+      </div>
+
+      <div class="trust-badge">
+        <div class="badge-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 8h16v16H8z" stroke="#B5830A" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <path d="M12 16l2.5 2.5L20 12" stroke="#0F766E" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge-title">Zero Data Retention</div>
+        <div class="badge-sub">We Never Store Your Data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="section section--warm pricing-section">
+  <div class="container">
+    <div class="eyebrow" style="color:var(--gold);">Service Plans</div>
+    <h2>Transparent, fixed-rate pricing</h2>
+    <p class="section-intro">No hidden fees. No per-removal charges. Your data protection, covered in full.</p>
+
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Coverage Feature</th>
+          <th>Individual</th>
+          <th class="popular-col"><span class="popular-tag">★ Most Popular</span>Professional</th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Databases Covered</td>
+          <td>200+</td>
+          <td class="featured">484+</td>
+          <td>484+ Custom</td>
+        </tr>
+        <tr>
+          <td>Initial Exposure Audit</td>
+          <td><span class="check">✓</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Opt-Out Submissions</td>
+          <td>Standard</td>
+          <td class="featured">Priority</td>
+          <td>Dedicated Team</td>
+        </tr>
+        <tr>
+          <td>Removal Verification</td>
+          <td><span class="check">✓</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Quarterly Monitoring</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Re-listing Suppression</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Dedicated Account Manager</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured"><span class="dash">—</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Family Member Coverage</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured">+ $49/yr each</td>
+          <td>Included (up to 5)</td>
+        </tr>
+        <tr>
+          <td>Monthly Reporting</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>GDPR & CCPA Filing Assistance</td>
+          <td><span class="dash">—</span></td>
+          <td class="featured"><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Annual Rate</td>
+          <td>
+            <span class="price-large">$99</span>
+            <span class="price-per">per year</span>
+          </td>
+          <td class="featured cta-cell">
+            <span class="price-large">$149</span>
+            <span class="price-per">per year</span>
+            <br/><br/>
+            <a href="/start?ref=authority" class="btn-gold">Get Started</a>
+          </td>
+          <td>
+            <span class="price-large" style="font-size:20px; margin-top:4px; display:block;">Contact Us</span>
+            <span class="price-per">Custom pricing</span>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+  <div class="container">
+    <div class="eyebrow" style="justify-content: center;">Take Control</div>
+    <h2>The cost of privacy is less than the <em>cost of exposure.</em></h2>
+    <a href="/start?ref=authority" class="btn-gold" style="font-size: 15px; padding: 14px 36px;">Request Your Free Audit</a>
+    <p class="cta-sub">
+      Free audit, no obligation
+      <span>·</span>
+      No long-term contracts
+      <span>·</span>
+      Results guaranteed or your money back
+    </p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="container">
+    <span class="footer-logo">VANISH</span>
+    <ul class="footer-links">
+      <li><a href="/start?ref=authority">Privacy Policy</a></li>
+      <li><a href="/start?ref=authority">Terms of Service</a></li>
+      <li><a href="/start?ref=authority">Security</a></li>
+      <li><a href="/start?ref=authority">Contact</a></li>
+      <li><a href="/start?ref=authority">Press</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 VANISH Privacy Inc. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ref="authority";
+  var p=new URLSearchParams(window.location.search);
+  var utm={ref:ref,utm_source:p.get("utm_source")||"",utm_medium:p.get("utm_medium")||"",utm_campaign:p.get("utm_campaign")||""};
+  try{sessionStorage.setItem("vanish_lp",JSON.stringify(utm));}catch(e){}
+  document.querySelectorAll('a[href*="/start"]').forEach(function(a){
+    var u=new URL(a.href,window.location.origin);
+    Object.keys(utm).forEach(function(k){if(utm[k])u.searchParams.set(k,utm[k]);});
+    a.href=u.toString();
+  });
+})();
+</script>
+</body>
+</html>

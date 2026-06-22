@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANISH — Scroll Cinema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --off-white: #F2EDE8;
+    --gold: #C9A96E;
+    --dark-red: #8B0000;
+    --panel-w: 100vw;
+  }
+
+  html { scroll-behavior: auto; }
+
+  body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+    opacity: 0.6;
+  }
+
+  /* ─── SECTION 1: VERTICAL INTRO ─── */
+  .intro-section {
+    min-height: 100vh;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .intro-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(80px, 14vw, 200px);
+    color: var(--off-white);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .intro-tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(18px, 2.5vw, 32px);
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.8;
+    max-width: 700px;
+  }
+
+  .split-word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .split-word-inner {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .gold-line-wrap {
+    margin-top: 60px;
+    height: 2px;
+    width: 100%;
+    max-width: 600px;
+    background: #1a1a1a;
+    overflow: hidden;
+  }
+
+  .gold-line {
+    height: 100%;
+    width: 100%;
+    background: var(--gold);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+
+  .intro-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(242, 237, 232, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .intro-scroll-hint::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: rgba(201, 169, 110, 0.4);
+  }
+
+  /* ─── HORIZONTAL SCROLL CONTAINER ─── */
+  .horizontal-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .horizontal-track {
+    display: flex;
+    width: 600vw;
+    height: 100vh;
+  }
+
+  /* ─── PANELS ─── */
+  .panel {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Panel 1 */
+  .panel-1 {
+    background: var(--black);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px;
+  }
+
+  .panel-1 .panel-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .panel-1 .panel-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(40px, 6vw, 96px);
+    color: var(--off-white);
+    max-width: 900px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .panel-1 .accent-bar {
+    margin-top: 48px;
+    height: 3px;
+    width: 0;
+    background: var(--gold);
+  }
+
+  .panel-1 .panel-counter {
+    position: absolute;
+    bottom: 50px;
+    right: 60px;
+    font-size: 120px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(201, 169, 110, 0.07);
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* Panel 2 */
+  .panel-2 {
+    background: var(--black);
+  }
+
+  .panel-2 .bg-photo {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.15);
+  }
+
+  .panel-2 .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(8,8,8,0.88) 0%, rgba(8,8,8,0.65) 100%);
+  }
+
+  .panel-2 .panel-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    padding: 80px;
+    align-self: center;
+  }
+
+  .panel-2 .panel-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(36px, 5vw, 80px);
+    color: var(--off-white);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  .panel-2 .panel-sub {
+    margin-top: 24px;
+    font-size: 14px;
+    color: rgba(242, 237, 232, 0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  /* Panel 3 */
+  .panel-3 {
+    background: var(--dark-red);
+    padding: 80px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .panel-3 .panel-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(242, 237, 232, 0.45);
+    margin-bottom: 48px;
+    opacity: 0;
+  }
+
+  .panel-3 .words-container {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(36px, 5.5vw, 88px);
+    color: var(--off-white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+  }
+
+  .stagger-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    margin-right: 0.25em;
+  }
+
+  .panel-3 .panel-counter {
+    position: absolute;
+    bottom: 50px;
+    right: 60px;
+    font-size: 120px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(242, 237, 232, 0.06);
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* Panel 4 */
+  .panel-4 {
+    background: var(--black);
+    padding: 80px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .panel-4 .stats-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(201, 169, 110, 0.7);
+    margin-bottom: 64px;
+    opacity: 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .stat-item {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .stat-number {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: clamp(40px, 5vw, 80px);
+    color: var(--gold);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: rgba(242, 237, 232, 0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* Panel 5 */
+  .panel-5 {
+    background: var(--black);
+  }
+
+  .panel-5 .bg-photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.15);
+  }
+
+  .panel-5 .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(8,8,8,0.75) 100%);
+  }
+
+  .panel-5 .panel-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    padding: 80px;
+  }
+
+  .panel-5 .panel-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(36px, 5vw, 80px);
+    color: var(--off-white);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  .panel-5 .panel-sub {
+    margin-top: 24px;
+    font-size: 14px;
+    color: rgba(242, 237, 232, 0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  /* Panel 6 */
+  .panel-6 {
+    background: transparent;
+    display: flex;
+  }
+
+  .panel-6-left {
+    width: 50%;
+    height: 100%;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    transform: translateX(-80px);
+    opacity: 0;
+  }
+
+  .panel-6-right {
+    width: 50%;
+    height: 100%;
+    background: var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 80px;
+    transform: translateX(80px);
+    opacity: 0;
+  }
+
+  .panel-6-left .big-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(48px, 8vw, 120px);
+    color: var(--off-white);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-align: center;
+  }
+
+  .panel-6-right .cta-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(8,8,8,0.55);
+    margin-bottom: 24px;
+  }
+
+  .panel-6-right .cta-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(24px, 3vw, 44px);
+    color: var(--black);
+    line-height: 1.2;
+    margin-bottom: 40px;
+    max-width: 400px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: #1a1a1a;
+    color: var(--gold);
+  }
+
+  .btn-ghost {
+    display: inline-block;
+    padding: 16px 40px;
+    background: transparent;
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(242, 237, 232, 0.35);
+    transition: all 0.3s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ─── SECTION 3: HOW IT WORKS ─── */
+  .how-section {
+    padding: 140px 60px;
+    background: var(--black);
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .how-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-bottom: 120px;
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  .how-row:last-child { margin-bottom: 0; }
+  .how-row.reverse { direction: rtl; }
+  .how-row.reverse > * { direction: ltr; }
+
+  .how-img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.3) contrast(1.1);
+  }
+
+  .how-step {
+    font-size: 80px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(201, 169, 110, 0.15);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .how-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(28px, 3.5vw, 52px);
+    color: var(--off-white);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .how-body {
+    font-size: 15px;
+    color: rgba(242, 237, 232, 0.55);
+    line-height: 1.75;
+    max-width: 440px;
+  }
+
+  /* ─── SECTION 4: VIDEO ─── */
+  .video-section {
+    padding: 80px 60px 120px;
+    background: var(--black);
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    aspect-ratio: 16/9;
+    clip-path: inset(50% 50%);
+    overflow: hidden;
+    background: #0f0f0f;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ─── SECTION 5: STATS COUNTER ─── */
+  .stats-section {
+    padding: 120px 60px;
+    background: #0d0d0d;
+    border-top: 1px solid rgba(201, 169, 110, 0.15);
+    border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+  }
+
+  .stats-counter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .counter-item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .counter-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(48px, 6vw, 88px);
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    display: block;
+  }
+
+  .counter-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(242, 237, 232, 0.45);
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* ─── SECTION 6: PRICING ─── */
+  .pricing-section {
+    padding: 140px 60px;
+    background: var(--black);
+  }
+
+  .pricing-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(36px, 5vw, 72px);
+    color: var(--off-white);
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .pricing-sub {
+    font-size: 15px;
+    color: rgba(242, 237, 232, 0.5);
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+  }
+
+  .pricing-card {
+    background: #111;
+    border: 1px solid rgba(242, 237, 232, 0.08);
+    padding: 48px 40px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(80px) scale(0.9);
+    transition: border-color 0.3s;
+  }
+
+  .pricing-card:hover {
+    border-color: rgba(201, 169, 110, 0.35);
+  }
+
+  .pricing-card.featured {
+    background: #161410;
+    border-color: rgba(201, 169, 110, 0.4);
+  }
+
+  .card-badge {
+    position: absolute;
+    top: -12px;
+    left: 40px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 4px 14px;
+    font-weight: 500;
+  }
+
+  .card-tier {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .card-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--off-white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .card-period {
+    font-size: 12px;
+    color: rgba(242, 237, 232, 0.4);
+    letter-spacing: 0.1em;
+    margin-bottom: 36px;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: rgba(242, 237, 232, 0.08);
+    margin-bottom: 36px;
+  }
+
+  .card-features {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .card-features li {
+    font-size: 14px;
+    color: rgba(242, 237, 232, 0.65);
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-features li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ─── SECTION 7: FINAL CTA ─── */
+  .final-section {
+    padding: 160px 60px;
+    background: var(--black);
+    text-align: center;
+    border-top: 1px solid rgba(201, 169, 110, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(201, 169, 110, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .final-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    display: block;
+  }
+
+  .final-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(48px, 9vw, 140px);
+    color: var(--off-white);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  .final-body {
+    font-size: 16px;
+    color: rgba(242, 237, 232, 0.5);
+    max-width: 480px;
+    margin: 0 auto 56px;
+    line-height: 1.7;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .final-cta-wrap {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .btn-gold {
+    display: inline-block;
+    padding: 18px 52px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-gold:hover {
+    background: #d4b07e;
+    transform: translateY(-2px);
+  }
+
+  /* ─── PANEL PROGRESS ─── */
+  .panel-progress {
+    position: fixed;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .panel-progress.visible { opacity: 1; }
+
+  .progress-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(201, 169, 110, 0.25);
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+
+  .progress-dot.active {
+    background: var(--gold);
+    transform: scale(1.5);
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    .horizontal-wrapper { display: none; }
+    .mobile-panels { display: block; }
+    .intro-section { padding: 60px 24px; }
+    .how-section { padding: 80px 24px; }
+    .how-row { grid-template-columns: 1fr; gap: 32px; }
+    .how-row.reverse { direction: ltr; }
+    .stats-counter-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .final-section { padding: 100px 24px; }
+    .panel-progress { display: none; }
+  }
+
+  @media (min-width: 769px) {
+    .mobile-panels { display: none; }
+  }
+
+  .mobile-panels .mobile-panel {
+    min-height: 100vh;
+    padding: 60px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .mobile-panels .mp-1 { background: var(--black); }
+  .mobile-panels .mp-2 { background: linear-gradient(135deg, rgba(8,8,8,0.9), rgba(8,8,8,0.8)), url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=70') center/cover; }
+  .mobile-panels .mp-3 { background: var(--dark-red); }
+  .mobile-panels .mp-4 { background: var(--black); }
+  .mobile-panels .mp-5 { background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(8,8,8,0.8)), url('https://images.unsplash.com/photo-1486299267070-83823f5448dd?w=800&q=70') center/cover; }
+  .mobile-panels .mp-6 { background: var(--black); }
+
+  .mp-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(32px, 8vw, 56px);
+    color: var(--off-white);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .mp-body {
+    font-size: 14px;
+    color: rgba(242, 237, 232, 0.6);
+    line-height: 1.7;
+  }
+
+  .mp-gold { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- Panel Progress Dots -->
+<div class="panel-progress" id="panelProgress">
+  <div class="progress-dot active" data-panel="0"></div>
+  <div class="progress-dot" data-panel="1"></div>
+  <div class="progress-dot" data-panel="2"></div>
+  <div class="progress-dot" data-panel="3"></div>
+  <div class="progress-dot" data-panel="4"></div>
+  <div class="progress-dot" data-panel="5"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1: VERTICAL INTRO
+═══════════════════════════════════════════ -->
+<section class="intro-section" id="intro">
+  <div class="intro-logo" id="introLogo">VANISH</div>
+  <div class="intro-tagline" id="introTagline" aria-label="Every search. Every purchase. Every move."></div>
+  <div class="gold-line-wrap">
+    <div class="gold-line" id="goldLine"></div>
+  </div>
+  <div class="intro-scroll-hint">Scroll to begin</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2: HORIZONTAL SCROLL CINEMA
+═══════════════════════════════════════════ -->
+<div class="horizontal-wrapper" id="horizontalWrapper">
+  <div class="horizontal-track" id="horizontalTrack">
+
+    <!-- PANEL 1: Black — stat -->
+    <div class="panel panel-1" id="panel1">
+      <p class="panel-eyebrow">The landscape</p>
+      <h2 class="panel-headline">In 2026, 4,000+ data brokers operate in the US.</h2>
+      <div class="accent-bar" id="panel1Bar"></div>
+      <span class="panel-counter">01</span>
+    </div>
+
+    <!-- PANEL 2: Dark photo -->
+    <div class="panel panel-2" id="panel2">
+      <div class="bg-photo" id="panel2Photo"></div>
+      <div class="bg-overlay"></div>
+      <div class="panel-content">
+        <h2 class="panel-headline">They built a profile on you without asking.</h2>
+        <p class="panel-sub">No consent. No notice. No limits.</p>
+      </div>
+    </div>
+
+    <!-- PANEL 3: Dark red — list -->
+    <div class="panel panel-3" id="panel3">
+      <p class="panel-label">What they know</p>
+      <div class="words-container" id="panel3Words">
+        Your name. Your address. Your income. Your relatives.
+      </div>
+      <span class="panel-counter">03</span>
+    </div>
+
+    <!-- PANEL 4: Stats -->
+    <div class="panel panel-4" id="panel4">
+      <p class="stats-label">The numbers</p>
+      <div class="stats-grid">
+        <div class="stat-item" id="stat1">
+          <span class="stat-number" data-target="212" data-suffix="">0</span>
+          <span class="stat-label">Files on you right now</span>
+        </div>
+        <div class="stat-item" id="stat2">
+          <span class="stat-number" data-target="3000" data-suffix="×">0</span>
+          <span class="stat-label">Times your data is sold per year</span>
+        </div>
+        <div class="stat-item" id="stat3">
+          <span class="stat-number" data-target="45" data-suffix="" data-prefix="$" data-decimal="true">0</span>
+          <span class="stat-label">Million value to thieves</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 5: City night photo -->
+    <div class="panel panel-5" id="panel5">
+      <div class="bg-photo" id="panel5Photo" style="background-image: url('https://images.unsplash.com/photo-1486299267070-83823f5448dd?w=1920&q=80');"></div>
+      <div class="bg-overlay"></div>
+      <div class="panel-content">
+        <h2 class="panel-headline">They operate in the shadows. So do we.</h2>
+        <p class="panel-sub">Automated. Relentless. Invisible.</p>
+      </div>
+    </div>
+
+    <!-- PANEL 6: Split CTA -->
+    <div class="panel panel-6" id="panel6">
+      <div class="panel-6-left" id="panel6Left">
+        <div class="big-text">YOUR<br>MOVE.</div>
+      </div>
+      <div class="panel-6-right" id="panel6Right">
+        <p class="cta-eyebrow">Take back control</p>
+        <p class="cta-text">Your data is being sold. We'll make them delete it—every single one.</p>
+        <a href="#pricing" class="btn-primary">Start Vanishing</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE: Stacked panels fallback -->
+<div class="mobile-panels" aria-hidden="true">
+  <div class="mobile-panel mp-1">
+    <h2 class="mp-headline">In 2026,<br>4,000+ data brokers<br>operate in the US.</h2>
+    <p class="mp-body">They buy and sell your personal information without your knowledge or consent.</p>
+  </div>
+  <div class="mobile-panel mp-2">
+    <h2 class="mp-headline">They built a profile on you without asking.</h2>
+    <p class="mp-body">No consent. No notice. No limits.</p>
+  </div>
+  <div class="mobile-panel mp-3">
+    <h2 class="mp-headline">Your name. Your address. Your income. Your relatives.</h2>
+    <p class="mp-body mp-gold">All in their databases.</p>
+  </div>
+  <div class="mobile-panel mp-4">
+    <h2 class="mp-headline">212 files<br>3,000× sold<br>$4.5M value</h2>
+    <p class="mp-body">The numbers are staggering. The solution is simple.</p>
+  </div>
+  <div class="mobile-panel mp-5">
+    <h2 class="mp-headline">They operate in the shadows. So do we.</h2>
+    <p class="mp-body">Automated. Relentless. Invisible.</p>
+  </div>
+  <div class="mobile-panel mp-6">
+    <h2 class="mp-headline">Your move.</h2>
+    <p class="mp-body">Take back control of your personal data today.</p>
+    <br>
+    <a href="#pricing" class="btn-gold" style="margin-top: 24px; display: inline-block;">Start Vanishing</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3: HOW IT WORKS
+═══════════════════════════════════════════ -->
+<section class="how-section" id="howItWorks">
+  <p class="section-label" id="howLabel">How it works</p>
+
+  <div class="how-row" id="howRow1">
+    <div>
+      <div class="how-step">01</div>
+      <h3 class="how-title">We scan 4,000+ data brokers instantly</h3>
+      <p class="how-body">Our proprietary crawler identifies every database that holds your information. Name, address, relatives, income — we find it all within hours.</p>
+    </div>
+    <div style="position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;"><img class="how-img" src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="Data threat" loading="lazy" style="width:100%;height:300px;object-fit:cover;display:block;filter:grayscale(0.3) contrast(1.1);"><div style="position:absolute;inset:0;background:rgba(201,169,110,0.4);mix-blend-mode:multiply;"></div></div>
+  </div>
+
+  <div class="how-row reverse" id="howRow2">
+    <div>
+      <div class="how-step">02</div>
+      <h3 class="how-title">Automated opt-out requests, sent on your behalf</h3>
+      <p class="how-body">We send legally-compliant removal requests to each broker. No manual forms. No waiting on hold. Just results in your dashboard.</p>
+    </div>
+    <div style="position:relative;width:100%;overflow:hidden;"><img class="how-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Circuit board" loading="lazy" style="width:100%;height:300px;object-fit:cover;display:block;filter:grayscale(0.3) contrast(1.1);"><div style="position:absolute;inset:0;background:rgba(201,169,110,0.4);mix-blend-mode:multiply;"></div></div>
+  </div>
+
+  <div class="how-row" id="howRow3">
+    <div>
+      <div class="how-step">03</div>
+      <h3 class="how-title">Continuous monitoring keeps you protected</h3>
+      <p class="how-body">Data brokers re-list you every 90 days. We re-scan monthly, catch new listings automatically, and repeat the removal process so you stay off the map.</p>
+    </div>
+    <div style="position:relative;width:100%;overflow:hidden;"><img class="how-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80" alt="Network" loading="lazy" style="width:100%;height:300px;object-fit:cover;display:block;filter:grayscale(0.3) contrast(1.1);"><div style="position:absolute;inset:0;background:rgba(201,169,110,0.4);mix-blend-mode:multiply;"></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4: VIDEO
+═══════════════════════════════════════════ -->
+<section style="padding: 0 60px 120px; background: var(--black);" id="videoSection">
+  <p class="section-label" style="opacity:0; transform: translateY(20px);" id="videoLabel">See it in action</p>
+  <div class="video-wrapper" id="videoWrapper">
+    <iframe
+      src="https://www.youtube.com/embed/aHTF4MWBRUY"
+      title="VANISH — How it works"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5: STATS COUNTER
+═══════════════════════════════════════════ -->
+<section class="stats-section" id="statsSection">
+  <div class="stats-counter-grid">
+    <div class="counter-item" id="c1">
+      <span class="counter-value" data-target="4000" data-suffix="+">0</span>
+      <span class="counter-label">Data brokers targeted</span>
+    </div>
+    <div class="counter-item" id="c2">
+      <span class="counter-value" data-target="98" data-suffix="%">0</span>
+      <span class="counter-label">Removal success rate</span>
+    </div>
+    <div class="counter-item" id="c3">
+      <span class="counter-value" data-target="14" data-suffix=" days">0</span>
+      <span class="counter-label">Average removal time</span>
+    </div>
+    <div class="counter-item" id="c4">
+      <span class="counter-value" data-target="50000" data-suffix="+">0</span>
+      <span class="counter-label">Profiles removed</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 6: PRICING
+═══════════════════════════════════════════ -->
+<section class="pricing-section" id="pricing">
+  <h2 class="pricing-headline" id="pricingHeadline">Simple, transparent pricing.</h2>
+  <p class="pricing-sub" id="pricingSub">No hidden fees. Cancel anytime. Your privacy is guaranteed.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card" id="card1">
+      <p class="card-tier">Essential</p>
+      <p class="card-price">$9</p>
+      <p class="card-period">/ month</p>
+      <div class="card-divider"></div>
+      <ul class="card-features">
+        <li>Scan 500+ brokers</li>
+        <li>Monthly re-scan</li>
+        <li>Email reports</li>
+        <li>Standard removal queue</li>
+      </ul>
+      <a href="/start?ref=cinema" class="btn-ghost" style="width: 100%; text-align: center; display: block;">Get started</a>
+    </div>
+
+    <div class="pricing-card featured" id="card2">
+      <div class="card-badge">Most Popular</div>
+      <p class="card-tier">Professional</p>
+      <p class="card-price">$19</p>
+      <p class="card-period">/ month</p>
+      <div class="card-divider"></div>
+      <ul class="card-features">
+        <li>All 4,000+ brokers</li>
+        <li>Weekly re-scan</li>
+        <li>Priority removal queue</li>
+        <li>Family protection (up to 4)</li>
+        <li>Dark web monitoring</li>
+      </ul>
+      <a href="/start?ref=cinema" class="btn-gold" style="width: 100%; text-align: center; display: block;">Start vanishing</a>
+    </div>
+
+    <div class="pricing-card" id="card3">
+      <p class="card-tier">Elite</p>
+      <p class="card-price">$39</p>
+      <p class="card-period">/ month</p>
+      <div class="card-divider"></div>
+      <ul class="card-features">
+        <li>Everything in Pro</li>
+        <li>Daily monitoring</li>
+        <li>Dedicated privacy advisor</li>
+        <li>Identity theft insurance</li>
+        <li>Unlimited family members</li>
+        <li>API access</li>
+      </ul>
+      <a href="/start?ref=cinema" class="btn-ghost" style="width: 100%; text-align: center; display: block;">Contact sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 7: FINAL CTA
+═══════════════════════════════════════════ -->
+<section class="final-section" id="finalCta">
+  <span class="final-eyebrow" id="finalEyebrow">You have a choice</span>
+  <h2 class="final-headline" id="finalHeadline">Disappear<br>from their<br>records.</h2>
+  <p class="final-body" id="finalBody">Take back your privacy. Your information belongs to you — not to 4,000 companies profiting from it without your consent.</p>
+  <div class="final-cta-wrap" id="finalCtaWrap">
+    <a href="#pricing" class="btn-gold">Start for free</a>
+    <a href="#howItWorks" class="btn-ghost">See how it works</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ──────────────────────────────────────────
+   UTILITY: Manual SplitText simulation
+────────────────────────────────────────── */
+function splitIntoWords(el, className) {
+  const text = el.textContent.trim();
+  const words = text.split(/\s+/);
+  el.innerHTML = '';
+  words.forEach((word, i) => {
+    const span = document.createElement('span');
+    span.className = className || 'split-word';
+    const inner = document.createElement('span');
+    inner.className = (className || 'split-word') + '-inner';
+    inner.textContent = word;
+    span.appendChild(inner);
+    el.appendChild(span);
+    if (i < words.length - 1) {
+      el.appendChild(document.createTextNode(' '));
+    }
+  });
+  return el.querySelectorAll('.' + (className || 'split-word') + '-inner');
+}
+
+function splitIntoChars(el) {
+  const text = el.textContent.trim();
+  el.innerHTML = '';
+  text.split('').forEach(char => {
+    const span = document.createElement('span');
+    span.style.display = 'inline-block';
+    span.style.opacity = '0';
+    span.style.transform = 'translateY(30px)';
+    span.textContent = char === ' ' ? ' ' : char;
+    el.appendChild(span);
+  });
+  return el.querySelectorAll('span');
+}
+
+/* ──────────────────────────────────────────
+   COUNT-UP UTILITY
+────────────────────────────────────────── */
+function animateCountUp(el, target, duration, prefix, suffix, isDecimal) {
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    let value;
+    if (isDecimal) {
+      value = (eased * target / 10).toFixed(1);
+    } else {
+      value = Math.round(eased * target);
+    }
+    el.textContent = (prefix || '') + value.toLocaleString() + (suffix || '');
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+/* ──────────────────────────────────────────
+   SECTION 1: INTRO ANIMATIONS
+────────────────────────────────────────── */
+const tl = gsap.timeline({ delay: 0.3 });
+
+tl.to('#introLogo', {
+  opacity: 1,
+  y: 0,
+  duration: 1.2,
+  ease: 'power4.out'
+});
+
+// Build intro tagline with split words
+const taglineEl = document.getElementById('introTagline');
+taglineEl.textContent = 'Every search. Every purchase. Every move.';
+const taglineWords = splitIntoWords(taglineEl, 'split-word');
+
+tl.to(taglineWords, {
+  opacity: 1,
+  y: 0,
+  duration: 0.7,
+  stagger: 0.08,
+  ease: 'power3.out'
+}, '-=0.4');
+
+// Gold line draw on scroll
+gsap.to('#goldLine', {
+  scaleX: 1,
+  duration: 1.2,
+  ease: 'power2.inOut',
+  scrollTrigger: {
+    trigger: '.gold-line-wrap',
+    start: 'top 85%',
+    toggleActions: 'play none none reverse'
+  }
+});
+
+/* ──────────────────────────────────────────
+   SECTION 2: HORIZONTAL SCROLL CINEMA
+────────────────────────────────────────── */
+const isMobile = window.innerWidth <= 768;
+
+if (!isMobile) {
+  const track = document.getElementById('horizontalTrack');
+  const wrapper = document.getElementById('horizontalWrapper');
+  const panels = gsap.utils.toArray('.panel');
+  const progressDots = document.querySelectorAll('.progress-dot');
+  const progressNav = document.getElementById('panelProgress');
+
+  // Core horizontal scroll
+  const horizontalScroll = gsap.to(track, {
+    x: () => -(track.offsetWidth - window.innerWidth),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: wrapper,
+      pin: true,
+      scrub: 1,
+      end: () => '+=' + (track.offsetWidth - window.innerWidth),
+      onUpdate: (self) => {
+        const currentPanel = Math.round(self.progress * (panels.length - 1));
+        progressDots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentPanel);
+        });
+      },
+      onEnter: () => progressNav.classList.add('visible'),
+      onLeave: () => progressNav.classList.remove('visible'),
+      onEnterBack: () => progressNav.classList.add('visible'),
+      onLeaveBack: () => progressNav.classList.remove('visible'),
+    }
+  });
+
+  // Progress dot click
+  progressDots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      const progress = i / (panels.length - 1);
+      const scrollStart = ScrollTrigger.getById('') || horizontalScroll.scrollTrigger;
+      const target = scrollStart.start + progress * (scrollStart.end - scrollStart.start);
+      gsap.to(window, { scrollTo: target, duration: 1, ease: 'power2.inOut' });
+    });
+  });
+
+  /* PANEL 1 animations */
+  const p1ST = ScrollTrigger.create({
+    trigger: wrapper,
+    start: 'top top',
+    end: '+=200',
+    scrub: false,
+    onEnter: () => {
+      gsap.to('.panel-1 .panel-eyebrow', { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out' });
+      gsap.to('.panel-1 .panel-headline', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
+      gsap.to('#panel1Bar', { width: 200, duration: 1.2, ease: 'power2.out', delay: 0.5 });
+    }
+  });
+
+  /* PANEL 2: parallax image */
+  gsap.to('#panel2Photo', {
+    x: '-10%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: wrapper,
+      start: 'top top',
+      end: () => '+=' + (track.offsetWidth - window.innerWidth),
+      scrub: 2
+    }
+  });
+
+  const panel2Progress = (track.offsetWidth - window.innerWidth) / 5;
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: () => '+=' + (panel2Progress * 0.8),
+    end: () => '+=' + (panel2Progress * 1.2),
+    onEnter: () => {
+      gsap.to('.panel-2 .panel-headline', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' });
+      gsap.to('.panel-2 .panel-sub', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.3 });
+    }
+  });
+
+  /* PANEL 3: stagger words */
+  const panel3HeadlineEl = document.getElementById('panel3Words');
+  const panel3Words = splitIntoWords(panel3HeadlineEl, 'stagger-word');
+
+  const panel3Offset = (track.offsetWidth - window.innerWidth) / 5 * 2;
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: () => '+=' + (panel3Offset * 0.85),
+    end: () => '+=' + (panel3Offset * 1.15),
+    onEnter: () => {
+      gsap.to('.panel-3 .panel-label', { opacity: 1, duration: 0.5 });
+      gsap.to(panel3Words, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', delay: 0.2 });
+    }
+  });
+
+  /* PANEL 4: count-up stats */
+  const panel4Offset = (track.offsetWidth - window.innerWidth) / 5 * 3;
+  let statsTriggered = false;
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: () => '+=' + (panel4Offset * 0.85),
+    end: () => '+=' + (panel4Offset * 1.15),
+    onEnter: () => {
+      if (statsTriggered) return;
+      statsTriggered = true;
+      gsap.to('.panel-4 .stats-label', { opacity: 1, duration: 0.5 });
+      gsap.to('#stat1', { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
+      gsap.to('#stat2', { opacity: 1, y: 0, duration: 0.7, delay: 0.25, ease: 'power3.out' });
+      gsap.to('#stat3', { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' });
+      setTimeout(() => {
+        const el1 = document.querySelector('#stat1 .stat-number');
+        animateCountUp(el1, 212, 1800, '', '', false);
+      }, 300);
+      setTimeout(() => {
+        const el2 = document.querySelector('#stat2 .stat-number');
+        animateCountUp(el2, 3000, 1800, '', '×', false);
+      }, 500);
+      setTimeout(() => {
+        const el3 = document.querySelector('#stat3 .stat-number');
+        animateCountUp(el3, 45, 1800, '$', 'M', true);
+      }, 700);
+    }
+  });
+
+  /* PANEL 5: photo reveal */
+  gsap.to('#panel5Photo', {
+    x: '-8%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: wrapper,
+      start: 'top top',
+      end: () => '+=' + (track.offsetWidth - window.innerWidth),
+      scrub: 2.5
+    }
+  });
+
+  const panel5Offset = (track.offsetWidth - window.innerWidth) / 5 * 4;
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: () => '+=' + (panel5Offset * 0.85),
+    end: () => '+=' + (panel5Offset * 1.15),
+    onEnter: () => {
+      gsap.to('.panel-5 .panel-headline', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' });
+      gsap.to('.panel-5 .panel-sub', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.3 });
+    }
+  });
+
+  /* PANEL 6: split slide-in */
+  const panel6Offset = (track.offsetWidth - window.innerWidth);
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: () => '+=' + (panel6Offset * 0.85),
+    end: () => '+=' + (panel6Offset * 1.1),
+    onEnter: () => {
+      gsap.to('#panel6Left', { opacity: 1, x: 0, duration: 1, ease: 'power3.out' });
+      gsap.to('#panel6Right', { opacity: 1, x: 0, duration: 1, ease: 'power3.out', delay: 0.15 });
+    }
+  });
+}
+
+/* ──────────────────────────────────────────
+   SECTION 3: HOW IT WORKS
+────────────────────────────────────────── */
+gsap.to('#howLabel', {
+  opacity: 1, y: 0, duration: 0.7,
+  scrollTrigger: { trigger: '#howLabel', start: 'top 85%' }
+});
+
+['#howRow1', '#howRow2', '#howRow3'].forEach((id, i) => {
+  gsap.to(id, {
+    opacity: 1, y: 0, duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: id, start: 'top 80%' },
+    delay: i * 0.1
+  });
+});
+
+/* ──────────────────────────────────────────
+   SECTION 4: VIDEO CLIP-PATH REVEAL
+────────────────────────────────────────── */
+gsap.to('#videoLabel', {
+  opacity: 1, y: 0, duration: 0.7,
+  scrollTrigger: { trigger: '#videoLabel', start: 'top 85%' }
+});
+
+gsap.to('#videoWrapper', {
+  clipPath: 'inset(0% 0%)',
+  duration: 1.4,
+  ease: 'power4.inOut',
+  scrollTrigger: { trigger: '#videoWrapper', start: 'top 80%' }
+});
+
+/* ──────────────────────────────────────────
+   SECTION 5: STATS COUNTER
+────────────────────────────────────────── */
+let globalStatsTriggered = false;
+ScrollTrigger.create({
+  trigger: '#statsSection',
+  start: 'top 75%',
+  onEnter: () => {
+    if (globalStatsTriggered) return;
+    globalStatsTriggered = true;
+    const items = document.querySelectorAll('.counter-item');
+    gsap.to(items, {
+      opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out'
+    });
+    const counters = document.querySelectorAll('.counter-value');
+    counters.forEach((el, i) => {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      setTimeout(() => {
+        animateCountUp(el, target, 2000, '', suffix, false);
+      }, i * 150 + 300);
+    });
+  }
+});
+
+/* ──────────────────────────────────────────
+   SECTION 6: PRICING
+────────────────────────────────────────── */
+gsap.to('#pricingHeadline', {
+  opacity: 1, y: 0, duration: 0.8,
+  scrollTrigger: { trigger: '#pricingHeadline', start: 'top 85%' }
+});
+gsap.to('#pricingSub', {
+  opacity: 1, y: 0, duration: 0.7, delay: 0.1,
+  scrollTrigger: { trigger: '#pricingSub', start: 'top 85%' }
+});
+
+gsap.to(['#card1', '#card2', '#card3'], {
+  opacity: 1,
+  y: 0,
+  scale: 1,
+  duration: 0.9,
+  stagger: 0.15,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '#card1', start: 'top 80%' }
+});
+
+/* ──────────────────────────────────────────
+   SECTION 7: FINAL CTA
+────────────────────────────────────────── */
+gsap.to('#finalEyebrow', {
+  opacity: 1, y: 0, duration: 0.7,
+  scrollTrigger: { trigger: '#finalCta', start: 'top 80%' }
+});
+gsap.to('#finalHeadline', {
+  opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.15,
+  scrollTrigger: { trigger: '#finalCta', start: 'top 80%' }
+});
+gsap.to('#finalBody', {
+  opacity: 1, y: 0, duration: 0.8, delay: 0.35,
+  scrollTrigger: { trigger: '#finalCta', start: 'top 80%' }
+});
+gsap.to('#finalCtaWrap', {
+  opacity: 1, y: 0, duration: 0.8, delay: 0.5,
+  scrollTrigger: { trigger: '#finalCta', start: 'top 80%' }
+});
+
+/* ──────────────────────────────────────────
+   RESIZE HANDLER
+────────────────────────────────────────── */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 200);
+});
+</script>
+<script>
+(function(){
+  var ref="cinema";
+  var p=new URLSearchParams(window.location.search);
+  var utm={ref:ref,utm_source:p.get("utm_source")||"",utm_medium:p.get("utm_medium")||"",utm_campaign:p.get("utm_campaign")||""};
+  try{sessionStorage.setItem("vanish_lp",JSON.stringify(utm));}catch(e){}
+  document.querySelectorAll('a[href*="/start"]').forEach(function(a){
+    var u=new URL(a.href,window.location.origin);
+    Object.keys(utm).forEach(function(k){if(utm[k])u.searchParams.set(k,utm[k]);});
+    a.href=u.toString();
+  });
+})();
+</script>
+</body>
+</html>

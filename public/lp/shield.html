@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANISH — Remove Your Personal Data From the Internet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white: #FFFFFF;
+    --gray-light: #F8FAFC;
+    --gray-mid: #E2E8F0;
+    --gray-text: #64748B;
+    --gray-subtle: #94A3B8;
+    --navy: #0F172A;
+    --navy-mid: #1E293B;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #DBEAFE;
+    --teal: #0D9488;
+    --teal-light: #F0FDFA;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --gold: #F59E0B;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --shadow-sm: 0 1px 3px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 4px 12px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.06);
+    --shadow-lg: 0 10px 30px rgba(15,23,42,0.12), 0 4px 12px rgba(15,23,42,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  img { display: block; max-width: 100%; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-mid);
+    padding: 0 40px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-text);
+    transition: color 0.15s;
+  }
+
+  .nav-links a:hover { color: var(--navy); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover { background: #1D4ED8; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-white {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--white);
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-white:hover { background: var(--gray-light); }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--blue);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--blue);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-outline:hover { background: var(--blue-light); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--white);
+    padding: 80px 40px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    border: 1px solid #BBF7D0;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 span { color: var(--blue); }
+
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--gray-text);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+
+  .trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-text);
+    padding: 6px 12px;
+    background: var(--gray-light);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-mid);
+  }
+
+  .badge svg { flex-shrink: 0; }
+
+  .hero-cta-wrap { margin-bottom: 16px; }
+
+  .hero-cta-wrap .btn-primary {
+    font-size: 16px;
+    padding: 16px 32px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-cta-note {
+    font-size: 13px;
+    color: var(--gray-subtle);
+    margin-top: 10px;
+  }
+
+  /* Hero Right */
+  .hero-visual {
+    position: relative;
+  }
+
+  .hero-photo-wrap {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4/5;
+    max-height: 520px;
+  }
+
+  .hero-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .status-card {
+    position: absolute;
+    bottom: -20px;
+    left: -30px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 18px 22px;
+    min-width: 260px;
+    border: 1px solid var(--gray-mid);
+  }
+
+  .status-card-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .status-item + .status-item {
+    border-top: 1px solid var(--gray-mid);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-green { background: var(--green); }
+  .dot-amber { background: var(--gold); }
+
+  .status-site { color: var(--navy); }
+  .status-label-removed { color: var(--green); font-size: 12px; }
+  .status-label-progress { color: var(--gold); font-size: 12px; }
+
+  /* ── PRESS BAR ── */
+  .press-bar {
+    background: var(--gray-light);
+    padding: 28px 40px;
+    text-align: center;
+    border-top: 1px solid var(--gray-mid);
+    border-bottom: 1px solid var(--gray-mid);
+  }
+
+  .press-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-subtle);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 16px;
+  }
+
+  .press-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .press-logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: #CBD5E1;
+    letter-spacing: -0.3px;
+    transition: color 0.15s;
+  }
+
+  .press-logo:hover { color: var(--gray-text); }
+
+  /* ── SECTION COMMON ── */
+  .section { padding: 96px 40px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  .section-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 18px;
+    color: var(--gray-text);
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 56px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+
+  .step-card {
+    background: var(--white);
+    border: 1px solid var(--gray-mid);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .step-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .step-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  .step-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--gray-text);
+    line-height: 1.65;
+  }
+
+  .feature-img-wrap {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    height: 460px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .feature-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+
+  /* ── STATS ── */
+  .stats-section {
+    background: var(--gray-light);
+    padding: 72px 40px;
+    border-top: 1px solid var(--gray-mid);
+    border-bottom: 1px solid var(--gray-mid);
+  }
+
+  .stats-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--gray-mid);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .stat-item {
+    background: var(--white);
+    padding: 40px 32px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-num span { color: var(--blue); }
+
+  .stat-label {
+    font-size: 15px;
+    color: var(--gray-text);
+    font-weight: 400;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .review-card {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-mid);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: box-shadow 0.2s;
+  }
+
+  .review-card:hover { box-shadow: var(--shadow-md); }
+
+  .review-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+  }
+
+  .star {
+    color: var(--gold);
+    font-size: 17px;
+  }
+
+  .review-quote {
+    font-size: 15px;
+    color: var(--navy-mid);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    border: 2px solid var(--gray-mid);
+  }
+
+  .author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .author-title {
+    font-size: 13px;
+    color: var(--gray-subtle);
+  }
+
+  /* ── FEATURES ── */
+  .features-section {
+    background: var(--white);
+    padding: 96px 40px;
+  }
+
+  .features-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .feature-img-left {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    height: 520px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .feature-img-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .features-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    background: var(--gray-light);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-mid);
+    transition: border-color 0.15s;
+  }
+
+  .feature-item:hover { border-color: var(--blue); }
+
+  .feature-check {
+    width: 28px;
+    height: 28px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .feature-text-main {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+
+  .feature-text-sub {
+    font-size: 14px;
+    color: var(--gray-text);
+  }
+
+  /* ── FAMILY SECTION ── */
+  .family-section {
+    background: var(--navy);
+    padding: 96px 40px;
+  }
+
+  .family-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .family-img-wrap {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    height: 440px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .family-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .family-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    color: #94D2CC;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .family-title {
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .family-sub {
+    font-size: 17px;
+    color: #94A3B8;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .family-perks {
+    list-style: none;
+    margin-bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .family-perk {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: #CBD5E1;
+    font-weight: 400;
+  }
+
+  .perk-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    background: var(--white);
+    padding: 96px 40px;
+  }
+
+  .pricing-inner { max-width: 1200px; margin: 0 auto; }
+
+  .pricing-header { text-align: center; margin-bottom: 64px; }
+  .pricing-header .section-sub { margin: 0 auto; }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-mid);
+    border-radius: var(--radius-xl);
+    padding: 36px 32px;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .pricing-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  .pricing-card.featured {
+    border-color: var(--blue);
+    border-width: 2px;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--teal);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 16px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-subtle);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .plan-price {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .plan-price span {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--gray-text);
+    letter-spacing: 0;
+  }
+
+  .plan-period {
+    font-size: 14px;
+    color: var(--gray-subtle);
+    margin-bottom: 24px;
+  }
+
+  .plan-divider {
+    height: 1px;
+    background: var(--gray-mid);
+    margin-bottom: 24px;
+  }
+
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .plan-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--navy-mid);
+  }
+
+  .check-green {
+    color: var(--green);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .plan-cta {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    background: var(--blue);
+    color: var(--white);
+  }
+
+  .plan-cta:hover { background: #1D4ED8; }
+
+  .plan-cta.outline {
+    background: transparent;
+    color: var(--blue);
+    border: 1.5px solid var(--blue);
+  }
+
+  .plan-cta.outline:hover { background: var(--blue-light); }
+
+  /* ── FINAL CTA ── */
+  .final-cta {
+    background: var(--blue-light);
+    padding: 96px 40px;
+    text-align: center;
+    border-top: 1px solid var(--blue-mid);
+    border-bottom: 1px solid var(--blue-mid);
+  }
+
+  .final-cta-inner { max-width: 680px; margin: 0 auto; }
+
+  .final-cta-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    border: 1px solid var(--blue-mid);
+  }
+
+  .final-cta h2 {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1.2px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .final-cta p {
+    font-size: 18px;
+    color: var(--gray-text);
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+
+  .final-cta .btn-primary {
+    font-size: 16px;
+    padding: 18px 40px;
+    margin-bottom: 14px;
+  }
+
+  .final-cta-note {
+    font-size: 14px;
+    color: var(--gray-subtle);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--gray-mid);
+    padding: 56px 40px 36px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+
+  .footer-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+
+  .footer-tagline {
+    font-size: 14px;
+    color: var(--gray-text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 240px;
+  }
+
+  .footer-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .trust-badge-sm {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-text);
+    padding: 5px 10px;
+    background: var(--gray-light);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-mid);
+  }
+
+  .footer-col-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+    color: var(--gray-text);
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover { color: var(--navy); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid var(--gray-mid);
+  }
+
+  .footer-legal {
+    font-size: 13px;
+    color: var(--gray-subtle);
+  }
+
+  .footer-legal a { color: var(--gray-text); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 48px; padding: 48px 20px 64px; }
+    .hero h1 { font-size: 36px; }
+    .hero-photo-wrap { max-height: 340px; aspect-ratio: 3/2; }
+    .status-card { left: 0; bottom: -16px; min-width: 220px; }
+    .section { padding: 64px 20px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .features-inner { grid-template-columns: 1fr; gap: 40px; }
+    .family-inner { grid-template-columns: 1fr; gap: 40px; }
+    .family-img-wrap { height: 280px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-card { max-width: 420px; margin: 0 auto; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .press-logos { gap: 20px; }
+    .final-cta { padding: 64px 20px; }
+  }
+
+  @media (max-width: 500px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/start?ref=shield" class="nav-logo">VANISH</a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="/start?ref=shield">Blog</a></li>
+  </ul>
+  <button class="btn-primary">Start Free Scan</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section>
+  <div class="hero">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow">
+        <span>★★★★★</span>
+        Trusted by 12,000+ people
+      </div>
+      <h1>Remove your personal data from the <span>internet.</span></h1>
+      <p class="hero-sub">VANISH sends deletion requests to 484+ data broker databases on your behalf — and monitors them 24/7 to keep you off.</p>
+
+      <div class="trust-badges">
+        <div class="badge">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M6.5 1L8.1 4.3L11.8 4.9L9.15 7.5L9.7 11.2L6.5 9.5L3.3 11.2L3.85 7.5L1.2 4.9L4.9 4.3L6.5 1Z" fill="#16A34A"/>
+          </svg>
+          CCPA Compliant
+        </div>
+        <div class="badge">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5 9L10.5 3.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          30-Day Results
+        </div>
+        <div class="badge">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5 9L10.5 3.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          No Long Contracts
+        </div>
+        <div class="badge">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5 9L10.5 3.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Cancel Anytime
+        </div>
+      </div>
+
+      <div class="hero-cta-wrap">
+        <button class="btn-primary" style="font-size:16px; padding:16px 32px;">
+          Start Free Scan — See Your Exposure
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M9 4L13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <p class="hero-cta-note">Free scan. No credit card required.</p>
+    </div>
+
+    <!-- Right -->
+    <div class="hero-visual">
+      <div class="hero-photo-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80"
+          alt="Confident businesswoman using VANISH"
+          width="600"
+          height="750"
+          loading="eager"
+          fetchpriority="high"
+        >
+      </div>
+      <div class="status-card">
+        <div class="status-card-title">Live Removal Status</div>
+        <div class="status-item">
+          <span class="status-dot dot-green"></span>
+          <span class="status-site">BeenVerified</span>
+          <span style="flex:1"></span>
+          <span class="status-label-removed">✓ Removed</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot dot-green"></span>
+          <span class="status-site">Spokeo</span>
+          <span style="flex:1"></span>
+          <span class="status-label-removed">✓ Removed</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot dot-amber"></span>
+          <span class="status-site">WhitePages</span>
+          <span style="flex:1"></span>
+          <span class="status-label-progress">⏳ In Progress</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRESS BAR ── -->
+<div class="press-bar">
+  <p class="press-label">Mentioned In</p>
+  <div class="press-logos">
+    <span class="press-logo">Forbes</span>
+    <span class="press-logo" style="font-family:Georgia,serif;">The Wall Street Journal</span>
+    <span class="press-logo">TechCrunch</span>
+    <span class="press-logo">WIRED</span>
+    <span class="press-logo" style="font-family:Georgia,serif;">The Guardian</span>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section" id="how-it-works" style="background: var(--white);">
+  <div class="section-inner">
+    <p class="section-eyebrow">Process</p>
+    <h2 class="section-title">Three steps to digital privacy</h2>
+    <p class="section-sub">We do all the heavy lifting. You sit back and watch your exposure shrink.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <circle cx="12" cy="12" r="7" stroke="#2563EB" stroke-width="2"/>
+            <path d="M17 17L22 22" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="step-title">Scan</h3>
+        <p class="step-desc">We search 484+ data broker databases for your name, address, phone number, relatives, and other personal details — and show you exactly what's exposed.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M13 4L13 22M6 8L13 4L20 8" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="6" y="12" width="14" height="8" rx="2" stroke="#2563EB" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="step-title">Remove</h3>
+        <p class="step-desc">We send opt-out and deletion requests on your behalf to every broker we found. No forms to fill out, no 47-step opt-out processes. We handle all of it.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M13 5V13L17 17" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="9" stroke="#2563EB" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="step-title">Monitor</h3>
+        <p class="step-desc">Data brokers re-list your information after 90 days. We re-scan every quarter and send fresh removal requests before your data comes back — automatically.</p>
+      </div>
+    </div>
+
+    <div class="feature-img-wrap">
+      <img
+        src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80"
+        alt="Person at laptop seeing their data removal progress"
+        width="1200"
+        height="460"
+        loading="lazy"
+      >
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num">484<span>+</span></div>
+      <div class="stat-label">Data brokers monitored</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">311</div>
+      <div class="stat-label">Opt-out requests sent per customer</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98<span>%</span></div>
+      <div class="stat-label">Removal rate within 30 days</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">12<span>K+</span></div>
+      <div class="stat-label">Customers protected</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── REVIEWS ── -->
+<section class="section" id="reviews" style="background: var(--white);">
+  <div class="section-inner">
+    <p class="section-eyebrow">Social Proof</p>
+    <h2 class="section-title">Real people. Real results.</h2>
+    <p class="section-sub">Join 12,000+ professionals who took back control of their personal data.</p>
+
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="review-quote">"I found my home address on 47 different websites. VANISH removed me from all of them within two weeks. I'm honestly shocked it was that fast."</p>
+        <div class="review-author">
+          <img class="avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" alt="Michael T." width="48" height="48">
+          <div>
+            <div class="author-name">Michael T.</div>
+            <div class="author-title">Marketing Executive, New York</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="review-quote">"As a public-facing professional, having my personal info online was a constant worry. VANISH handles it automatically — I get a report every month showing what they've removed."</p>
+        <div class="review-author">
+          <img class="avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80" alt="Sarah K." width="48" height="48">
+          <div>
+            <div class="author-name">Sarah K.</div>
+            <div class="author-title">Attorney, Chicago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="review-quote">"The free scan showed my info on 63 sites I'd never heard of. Signed up that same day. The monitoring feature alone is worth every penny — it never stops working."</p>
+        <div class="review-author">
+          <img class="avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt="James R." width="48" height="48">
+          <div>
+            <div class="author-name">James R.</div>
+            <div class="author-title">Software Engineer, Austin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features-section">
+  <div class="features-inner">
+    <div class="feature-img-left">
+      <img
+        src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80"
+        alt="Clean professional office environment"
+        width="600"
+        height="520"
+        loading="lazy"
+      >
+    </div>
+
+    <div>
+      <p class="section-eyebrow">What's Included</p>
+      <h2 class="section-title" style="margin-bottom:12px;">Everything you need. Nothing you don't.</h2>
+      <p style="font-size:17px; color:var(--gray-text); line-height:1.6; margin-bottom:36px;">Every plan includes our full removal suite — no add-ons, no upsells, no surprises.</p>
+
+      <ul class="features-list">
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">484+ data brokers covered</div>
+            <div class="feature-text-sub">The most comprehensive broker list on the market</div>
+          </div>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">Automated opt-out engine</div>
+            <div class="feature-text-sub">We handle every form, email, and verification step</div>
+          </div>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">Monthly progress reports</div>
+            <div class="feature-text-sub">See exactly what was removed and what's in progress</div>
+          </div>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">Re-listing protection</div>
+            <div class="feature-text-sub">Quarterly rescans catch re-listed data automatically</div>
+          </div>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">Family plans available</div>
+            <div class="feature-text-sub">Protect up to 5 family members under one account</div>
+          </div>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="feature-text-main">Dedicated privacy support</div>
+            <div class="feature-text-sub">Real humans who answer within one business day</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAMILY SECTION ── -->
+<section class="family-section">
+  <div class="family-inner">
+    <div class="family-img-wrap">
+      <img
+        src="https://images.unsplash.com/photo-1511895426328-dc8714191011?w=800&q=80"
+        alt="Family protected by VANISH"
+        width="800"
+        height="440"
+        loading="lazy"
+      >
+    </div>
+
+    <div>
+      <div class="family-tag">Family Protection</div>
+      <h2 class="family-title">Protect your whole family.</h2>
+      <p class="family-sub">Your personal data being exposed isn't just your problem — it affects everyone in your household. With VANISH Family, protect up to 5 members under a single plan.</p>
+      <ul class="family-perks">
+        <li class="family-perk"><span class="perk-dot"></span> One dashboard for everyone</li>
+        <li class="family-perk"><span class="perk-dot"></span> Individual reports per family member</li>
+        <li class="family-perk"><span class="perk-dot"></span> Save up to 40% vs. individual plans</li>
+        <li class="family-perk"><span class="perk-dot"></span> Add or remove members anytime</li>
+      </ul>
+      <button class="btn-white">View Family Plans →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-header">
+      <p class="section-eyebrow">Pricing</p>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-sub">Start with a free scan. Upgrade to continuous monitoring and removal anytime.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Individual -->
+      <div class="pricing-card">
+        <div class="plan-name">Individual</div>
+        <div class="plan-price">$99<span>/yr</span></div>
+        <div class="plan-period">Billed annually · $8.25/month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check-green">✓</span> 484+ brokers covered</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Automated removal requests</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Monthly progress report</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Quarterly re-scans</li>
+          <li class="plan-feature"><span class="check-green">✓</span> 1 person covered</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Email support</li>
+        </ul>
+        <button class="plan-cta outline">Get Started Free</button>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$149<span>/yr</span></div>
+        <div class="plan-period">Billed annually · $12.42/month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check-green">✓</span> Everything in Individual</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Weekly re-scan monitoring</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Priority removal queue</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Dark web monitoring</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Phone & email support</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Advanced exposure score</li>
+        </ul>
+        <button class="plan-cta">Start Free Scan →</button>
+      </div>
+
+      <!-- Family -->
+      <div class="pricing-card">
+        <div class="plan-name">Family</div>
+        <div class="plan-price">$249<span>/yr</span></div>
+        <div class="plan-period">Billed annually · Up to 5 members</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check-green">✓</span> Everything in Pro</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Up to 5 family members</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Shared family dashboard</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Per-member reports</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Dedicated account manager</li>
+          <li class="plan-feature"><span class="check-green">✓</span> Save 40% vs individual</li>
+        </ul>
+        <button class="plan-cta outline">Get Started Free</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+  <div class="final-cta-inner">
+    <div class="final-cta-eyebrow">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2L7 7L10 10" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="7" r="5.5" stroke="#2563EB" stroke-width="1.5"/></svg>
+      Right now, this is happening
+    </div>
+    <h2>Your personal data is on 484 databases right now.</h2>
+    <p>Every hour you wait, data brokers sell your home address, phone number, and relatives' names to marketers, stalkers, and scammers. Your free scan takes 60 seconds.</p>
+    <div>
+      <button class="btn-primary" style="font-size:16px; padding:18px 40px; display:inline-flex;">
+        Start Your Free Scan
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:8px;"><path d="M3 8H13M9 4L13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <p class="final-cta-note" style="margin-top:14px;">No credit card required · Results in 60 seconds · Cancel anytime</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">VANISH</div>
+        <p class="footer-tagline">Removing your personal data from 484+ data brokers, automatically, every quarter.</p>
+        <div class="footer-trust-badges">
+          <div class="trust-badge-sm">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1.5L5.5 9.5M2 4L5.5 1.5L9 4" stroke="#64748B" stroke-width="1.2" stroke-linecap="round"/></svg>
+            SSL Encrypted
+          </div>
+          <div class="trust-badge-sm">✓ CCPA</div>
+          <div class="trust-badge-sm">✓ GDPR</div>
+          <div class="trust-badge-sm">BBB A+</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="/start?ref=shield">How It Works</a></li>
+          <li><a href="/start?ref=shield">Pricing</a></li>
+          <li><a href="/start?ref=shield">Data Brokers List</a></li>
+          <li><a href="/start?ref=shield">Family Plans</a></li>
+          <li><a href="/start?ref=shield">Free Scan</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="/start?ref=shield">About</a></li>
+          <li><a href="/start?ref=shield">Blog</a></li>
+          <li><a href="/start?ref=shield">Press</a></li>
+          <li><a href="/start?ref=shield">Careers</a></li>
+          <li><a href="/start?ref=shield">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="/start?ref=shield">Privacy Policy</a></li>
+          <li><a href="/start?ref=shield">Terms of Service</a></li>
+          <li><a href="/start?ref=shield">Cookie Policy</a></li>
+          <li><a href="/start?ref=shield">CCPA Rights</a></li>
+          <li><a href="/start?ref=shield">Security</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-legal">© 2026 VANISH Privacy, Inc. All rights reserved.</span>
+      <span class="footer-legal">
+        <a href="/start?ref=shield">Privacy</a> · <a href="/start?ref=shield">Terms</a> · <a href="/start?ref=shield">Cookies</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ref="shield";
+  var p=new URLSearchParams(window.location.search);
+  var utm={ref:ref,utm_source:p.get("utm_source")||"",utm_medium:p.get("utm_medium")||"",utm_campaign:p.get("utm_campaign")||""};
+  try{sessionStorage.setItem("vanish_lp",JSON.stringify(utm));}catch(e){}
+  document.querySelectorAll('a[href*="/start"]').forEach(function(a){
+    var u=new URL(a.href,window.location.origin);
+    Object.keys(utm).forEach(function(k){if(utm[k])u.searchParams.set(k,utm[k]);});
+    a.href=u.toString();
+  });
+})();
+</script>
+</body>
+</html>

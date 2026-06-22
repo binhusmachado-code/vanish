@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANISH — CASE FILE #2026 — EXHIBIT A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+  /* =============================================
+     TOKENS
+  ============================================= */
+  :root {
+    --paper:       #F5F0E8;
+    --black:       #0A0A0A;
+    --red:         #E03434;
+    --gray:        #2A2A2A;
+    --yellow:      #FFE566;
+    --white:       #FFFFFF;
+    --border:      3px solid #0A0A0A;
+    --border-thick: 4px solid #0A0A0A;
+    --shadow:      6px 6px 0px #0A0A0A;
+    --shadow-sm:   4px 4px 0px #0A0A0A;
+    --shadow-red:  4px 4px 0px #E03434;
+    --font-mono:   'IBM Plex Mono', monospace;
+    --font-sans:   'Space Grotesk', sans-serif;
+    --font-serif:  'Source Serif 4', serif;
+  }
+
+  /* =============================================
+     RESET & BASE
+  ============================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--black);
+    font-family: var(--font-serif);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* =============================================
+     TYPOGRAPHY
+  ============================================= */
+  .mono { font-family: var(--font-mono); }
+  .sans { font-family: var(--font-sans); }
+  .serif { font-family: var(--font-serif); }
+
+  .text-xs  { font-size: 0.75rem; }
+  .text-sm  { font-size: 0.875rem; }
+  .text-base { font-size: 1rem; }
+  .text-lg  { font-size: 1.125rem; }
+  .text-xl  { font-size: 1.25rem; }
+  .text-2xl { font-size: 1.5rem; }
+  .text-3xl { font-size: 2rem; }
+  .text-4xl { font-size: clamp(2rem, 4vw, 3rem); }
+  .text-5xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+  .text-hero { font-size: clamp(2.75rem, 6vw, 5rem); }
+
+  /* Yellow highlight effect */
+  .highlight {
+    background: linear-gradient(to bottom, transparent 40%, var(--yellow) 40%);
+    display: inline;
+  }
+
+  /* =============================================
+     BRUTAL UI PRIMITIVES
+  ============================================= */
+  .brutal-border {
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+  }
+
+  .brutal-border-sm {
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .brutal-btn {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    background: var(--black);
+    color: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform 80ms, box-shadow 80ms;
+    white-space: nowrap;
+  }
+  .brutal-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--black);
+  }
+  .brutal-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
+
+  .brutal-btn-red {
+    background: var(--red);
+    color: var(--white);
+    box-shadow: var(--shadow-red);
+    border-color: var(--red);
+  }
+  .brutal-btn-red:hover {
+    box-shadow: 8px 8px 0 var(--red);
+  }
+
+  .brutal-btn-outline {
+    background: transparent;
+    color: var(--black);
+  }
+
+  /* =============================================
+     STAMP EFFECT
+  ============================================= */
+  .stamp {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 4px solid var(--red);
+    padding: 6px 18px;
+    transform: rotate(-12deg);
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  .stamp-sm {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-width: 2px;
+    transform: rotate(-8deg);
+  }
+
+  /* =============================================
+     CLASSIFICATION BAR
+  ============================================= */
+  .classification-bar {
+    background: var(--black);
+    color: var(--yellow);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 24px;
+    text-align: center;
+  }
+
+  /* =============================================
+     NAV — FOLDER TABS
+  ============================================= */
+  nav {
+    background: var(--paper);
+    border-bottom: var(--border-thick);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: var(--gray);
+    border-right: 2px solid var(--black);
+    white-space: nowrap;
+    position: relative;
+    transition: background 150ms;
+  }
+
+  .nav-tab::before {
+    content: attr(data-num);
+    font-size: 0.6rem;
+    opacity: 0.5;
+    margin-right: 6px;
+  }
+
+  .nav-tab:hover,
+  .nav-tab.active {
+    background: var(--black);
+    color: var(--yellow);
+  }
+
+  .nav-brand {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    padding: 14px 24px;
+    border-right: var(--border-thick);
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .nav-brand span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--red);
+    border: 2px solid var(--black);
+  }
+
+  /* =============================================
+     HERO
+  ============================================= */
+  #hero {
+    padding: 60px 24px 80px;
+  }
+
+  .hero-case-header {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    margin-bottom: 32px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-case-header span { color: var(--red); }
+
+  .hero-card {
+    background: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-image-wrap {
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+  }
+
+  .hero-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(60%) contrast(1.1);
+  }
+
+  .hero-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.7) 100%);
+  }
+
+  .hero-stamp-wrap {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    transform: rotate(-10deg);
+  }
+
+  .hero-content {
+    padding: 40px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .hero-headline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    color: var(--black);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-sub {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--gray);
+    max-width: 600px;
+    margin-bottom: 36px;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .hero-meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-top: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  /* =============================================
+     SECTION HEADERS
+  ============================================= */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--red);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gray);
+    max-width: 640px;
+  }
+
+  /* =============================================
+     EVIDENCE SECTION — 3 COLUMNS
+  ============================================= */
+  #evidence {
+    padding: 80px 24px;
+    background: var(--black);
+    color: var(--white);
+    border-top: var(--border-thick);
+    border-bottom: var(--border-thick);
+  }
+
+  .evidence-header {
+    margin-bottom: 48px;
+  }
+
+  .evidence-header .section-label { color: var(--yellow); }
+  .evidence-header .section-label::after { background: var(--yellow); }
+  .evidence-header .section-title { color: var(--white); }
+  .evidence-header .section-desc { color: #aaa; }
+
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 4px solid var(--white);
+    box-shadow: 8px 8px 0 var(--red);
+  }
+
+  .evidence-col {
+    padding: 32px;
+    border-right: 3px solid rgba(255,255,255,0.2);
+  }
+
+  .evidence-col:last-child { border-right: none; }
+
+  .evidence-col-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 12px;
+  }
+
+  .fact-item {
+    margin-bottom: 20px;
+    padding-left: 12px;
+    border-left: 2px solid var(--red);
+  }
+
+  .fact-item p {
+    font-family: var(--font-serif);
+    font-size: 0.925rem;
+    line-height: 1.6;
+    color: #ddd;
+  }
+
+  .fact-item .source {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #888;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Dossier card */
+  .dossier-card {
+    background: var(--paper);
+    color: var(--black);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dossier-card::before {
+    content: 'PERSONAL FILE';
+    position: absolute;
+    top: 10px;
+    right: -20px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--paper);
+    background: var(--red);
+    padding: 2px 28px;
+    transform: rotate(45deg);
+  }
+
+  .dossier-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(10,10,10,0.2);
+    gap: 12px;
+  }
+
+  .dossier-row:last-child { border-bottom: none; }
+
+  .dossier-key {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .dossier-val {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--black);
+    text-align: right;
+  }
+
+  .dossier-val.redacted {
+    background: var(--black);
+    color: transparent;
+    border-radius: 2px;
+    user-select: none;
+  }
+
+  .dossier-header {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--black);
+  }
+
+  .dossier-stamp-wrap {
+    position: absolute;
+    bottom: 16px;
+    left: 12px;
+  }
+
+  .big-stat {
+    margin-top: 24px;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 24px;
+    border: 3px solid var(--black);
+    position: relative;
+  }
+
+  .big-stat-num {
+    font-family: var(--font-sans);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--black);
+  }
+
+  .big-stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+
+  /* =============================================
+     METHODS OF COLLECTION
+  ============================================= */
+  #methods {
+    padding: 80px 24px;
+    background: var(--paper);
+    border-bottom: var(--border-thick);
+  }
+
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 48px;
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+  }
+
+  .method-card {
+    padding: 32px;
+    border-right: 3px solid var(--black);
+    border-bottom: 3px solid var(--black);
+    position: relative;
+    background: var(--white);
+    transition: background 200ms;
+  }
+
+  .method-card:nth-child(2n) { border-right: none; }
+  .method-card:nth-child(3),
+  .method-card:nth-child(4) { border-bottom: none; }
+
+  .method-card:hover { background: var(--paper); }
+
+  .method-icon {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    background: var(--yellow);
+  }
+
+  .method-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .method-title {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .method-desc {
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 16px;
+  }
+
+  .method-stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  /* =============================================
+     VIDEO SECTION
+  ============================================= */
+  #video-section {
+    padding: 80px 24px;
+    background: var(--black);
+    border-bottom: var(--border-thick);
+  }
+
+  .video-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .video-label::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: var(--red);
+    border: 2px solid var(--white);
+    border-radius: 50%;
+  }
+
+  .video-container {
+    border: 4px solid var(--white);
+    box-shadow: 8px 8px 0 var(--red);
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .video-container iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none;
+  }
+
+  .video-badge {
+    background: var(--yellow);
+    color: var(--black);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    display: inline-block;
+    border: 2px solid var(--black);
+    margin-bottom: 16px;
+  }
+
+  .video-headline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    color: var(--white);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  /* =============================================
+     HOW VANISH WORKS — TIMELINE
+  ============================================= */
+  #how-it-works {
+    padding: 80px 24px;
+    background: var(--paper);
+    border-bottom: var(--border-thick);
+  }
+
+  .steps-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 48px;
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+  }
+
+  .step-card {
+    padding: 36px 28px;
+    border-right: 3px solid var(--black);
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+    transition: background 200ms;
+  }
+
+  .step-card:last-child { border-right: none; }
+  .step-card:hover { background: var(--yellow); }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .step-icon {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    background: var(--paper);
+  }
+
+  .step-title {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--gray);
+  }
+
+  /* connector arrow */
+  .step-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--yellow);
+    border: 3px solid var(--black);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    z-index: 2;
+  }
+
+  .step-card:last-child::after { display: none; }
+
+  /* =============================================
+     STATS — BRUTAL NUMBERS
+  ============================================= */
+  #stats {
+    padding: 80px 24px;
+    background: var(--black);
+    border-bottom: var(--border-thick);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 4px solid var(--white);
+    box-shadow: 8px 8px 0 var(--red);
+    margin-top: 48px;
+  }
+
+  .stat-card {
+    padding: 40px 28px;
+    border-right: 3px solid rgba(255,255,255,0.15);
+    background: var(--black);
+    transition: background 200ms;
+  }
+
+  .stat-card:last-child { border-right: none; }
+  .stat-card:hover { background: #111; }
+
+  .stat-num {
+    font-family: var(--font-sans);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--yellow);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #888;
+    text-transform: uppercase;
+  }
+
+  .stat-desc {
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* =============================================
+     TESTIMONIALS
+  ============================================= */
+  #testimonials {
+    padding: 80px 24px;
+    background: var(--paper);
+    border-bottom: var(--border-thick);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .testimonial-card {
+    background: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-sm);
+    padding: 32px;
+    position: relative;
+  }
+
+  .testimonial-quote-mark {
+    font-family: var(--font-sans);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--yellow);
+    line-height: 0.8;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .testimonial-text {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+
+  .testimonial-text .hl {
+    background: linear-gradient(to bottom, transparent 50%, var(--yellow) 50%);
+  }
+
+  .testimonial-sig {
+    border-top: 2px solid var(--black);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sig-name {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  .sig-role {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  .testimonial-verified {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  /* =============================================
+     PRICING
+  ============================================= */
+  #pricing {
+    padding: 80px 24px;
+    background: var(--paper);
+    border-bottom: var(--border-thick);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 48px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    border: var(--border-thick);
+    padding: 40px 32px;
+    background: var(--white);
+    position: relative;
+    margin-right: -3px;
+  }
+
+  .pricing-card:last-child { margin-right: 0; }
+
+  .pricing-card.featured {
+    background: var(--black);
+    color: var(--white);
+    box-shadow: var(--shadow);
+    z-index: 1;
+    margin-top: -12px;
+    margin-bottom: -12px;
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--red);
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border: 2px solid var(--black);
+    white-space: nowrap;
+  }
+
+  .pricing-tier {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card.featured .pricing-tier { color: var(--yellow); }
+
+  .pricing-price {
+    font-family: var(--font-sans);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -0.03em;
+  }
+
+  .pricing-period {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 24px;
+  }
+
+  .pricing-card.featured .pricing-period { color: #aaa; }
+
+  .pricing-divider {
+    height: 2px;
+    background: var(--black);
+    margin-bottom: 24px;
+  }
+
+  .pricing-card.featured .pricing-divider { background: var(--white); }
+
+  .pricing-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--gray);
+  }
+
+  .pricing-card.featured .pricing-feature { color: #ccc; }
+
+  .pricing-feature-icon {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--black);
+    background: var(--yellow);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pricing-card.featured .pricing-feature-icon {
+    border-color: var(--white);
+    background: var(--red);
+  }
+
+  .pricing-cta {
+    margin-top: 28px;
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 3px solid var(--black);
+    background: transparent;
+    color: var(--black);
+    box-shadow: 4px 4px 0 var(--black);
+    transition: transform 80ms, box-shadow 80ms;
+    text-decoration: none;
+    display: block;
+  }
+
+  .pricing-card.featured .pricing-cta {
+    background: var(--red);
+    color: var(--white);
+    border-color: var(--red);
+    box-shadow: 4px 4px 0 rgba(255,255,255,0.3);
+  }
+
+  .pricing-cta:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  /* =============================================
+     EVIDENCE PHOTO SECTION
+  ============================================= */
+  #evidence-photo {
+    padding: 0;
+    background: var(--black);
+    border-top: var(--border-thick);
+    border-bottom: var(--border-thick);
+  }
+  .ep-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .ep-img {
+    width: 100%;
+    display: block;
+    max-height: 420px;
+    object-fit: cover;
+    filter: sepia(0.9) grayscale(0.8) contrast(1.15) brightness(0.75);
+  }
+  .ep-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+  }
+  .ep-caption-bar {
+    background: var(--black);
+    border-top: 3px solid var(--white);
+    padding: 16px 24px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--paper);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* =============================================
+     FINAL CTA
+  ============================================= */
+  #final-cta {
+    padding: 100px 24px;
+    background: var(--black);
+    text-align: center;
+  }
+
+  .final-case-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .final-headline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    color: var(--white);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .final-verdict {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    border: 2px solid var(--yellow);
+    padding: 6px 16px;
+    margin-bottom: 32px;
+  }
+
+  .final-sub {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: #888;
+    max-width: 540px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+
+  /* =============================================
+     FOOTER
+  ============================================= */
+  footer {
+    background: var(--black);
+    border-top: 3px solid #222;
+    padding: 32px 24px;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-meta {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: #555;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover { color: var(--yellow); }
+
+  /* =============================================
+     SCROLL REVEALS
+  ============================================= */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* stagger */
+  .reveal-delay-1 { transition-delay: 100ms; }
+  .reveal-delay-2 { transition-delay: 200ms; }
+  .reveal-delay-3 { transition-delay: 300ms; }
+  .reveal-delay-4 { transition-delay: 400ms; }
+
+  /* =============================================
+     RESPONSIVE
+  ============================================= */
+  @media (max-width: 900px) {
+    .evidence-grid { grid-template-columns: 1fr; }
+    .evidence-col { border-right: none; border-bottom: 3px solid rgba(255,255,255,0.2); }
+    .evidence-col:last-child { border-bottom: none; }
+
+    .steps-track { grid-template-columns: 1fr 1fr; }
+    .step-card:nth-child(2) { border-right: none; }
+    .step-card:nth-child(3) { border-bottom: 3px solid var(--black); }
+    .step-card:nth-child(2)::after,
+    .step-card:nth-child(4)::after { display: none; }
+
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-card:nth-child(2) { border-right: none; }
+    .stat-card:nth-child(3) { border-top: 3px solid rgba(255,255,255,0.15); }
+
+    .testimonials-grid { grid-template-columns: 1fr; }
+
+    .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
+    .pricing-card { margin-right: 0; }
+    .pricing-card.featured { margin-top: 0; margin-bottom: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .methods-grid { grid-template-columns: 1fr; }
+    .method-card:nth-child(n) { border-right: none; border-bottom: 3px solid var(--black); }
+    .method-card:last-child { border-bottom: none; }
+
+    .steps-track { grid-template-columns: 1fr; }
+    .step-card { border-right: none; border-bottom: 3px solid var(--black); }
+    .step-card:last-child { border-bottom: none; }
+    .step-card::after { display: none; }
+
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+
+    .hero-cta-group { flex-direction: column; align-items: flex-start; }
+
+    .nav-tab { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     CLASSIFICATION BAR
+============================================================ -->
+<div class="classification-bar">
+  CLASSIFICATION: PUBLIC RECORD &nbsp;//&nbsp; CASE FILE #2026-VANISH &nbsp;//&nbsp; STATUS: ACTIVE &nbsp;//&nbsp; DISTRIBUTION: UNRESTRICTED
+</div>
+
+<!-- ============================================================
+     NAV — FOLDER TABS
+============================================================ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span></span>VANISH
+    </div>
+    <a href="#evidence" class="nav-tab" data-num="01">The Evidence</a>
+    <a href="#methods" class="nav-tab" data-num="02">Methods</a>
+    <a href="#video-section" class="nav-tab" data-num="03">Video</a>
+    <a href="#how-it-works" class="nav-tab" data-num="04">Process</a>
+    <a href="#stats" class="nav-tab" data-num="05">Data</a>
+    <a href="#testimonials" class="nav-tab" data-num="06">Witnesses</a>
+    <a href="#pricing" class="nav-tab" data-num="07">Pricing</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+  <div class="container">
+
+    <div class="hero-case-header mono">
+      CASE FILE #2026-VANISH &nbsp;|&nbsp;
+      FILED: <span>2026-01-01</span> &nbsp;|&nbsp;
+      JURISDICTION: UNITED STATES &nbsp;|&nbsp;
+      CLASSIFICATION: <span>PUBLIC RECORD</span>
+    </div>
+
+    <div class="hero-card reveal">
+
+      <div class="hero-image-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1920&q=80"
+          alt="Code and data on screens"
+          loading="eager"
+          fetchpriority="high"
+          width="1920" height="640"
+          style="filter: sepia(0.8) grayscale(0.4) contrast(1.1);"
+        >
+        <div class="hero-image-overlay"></div>
+        <div class="hero-stamp-wrap">
+          <div class="stamp" style="font-size:2rem; padding: 12px 24px; border-width: 5px;">EXPOSED</div>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-eyebrow">EXHIBIT A &nbsp;—&nbsp; CLASSIFIED EVIDENCE</div>
+
+        <h1 class="hero-headline">
+          YOUR PERSONAL DATA<br>IS ALREADY FOR SALE.
+        </h1>
+
+        <p class="hero-sub">
+          Data brokers have built a detailed file on you — your name, address, relatives, income,
+          health conditions, political views, and daily routines — and they're selling it right now
+          to anyone willing to pay. <span class="highlight">You were never asked. You never consented.</span>
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#pricing" class="brutal-btn">
+            ERASE MY FILE &rarr;
+          </a>
+          <a href="#evidence" class="brutal-btn brutal-btn-outline">
+            SEE THE EVIDENCE
+          </a>
+        </div>
+
+        <p class="hero-meta mono">
+          NO CREDIT CARD FOR SCAN &nbsp;|&nbsp; RESULTS IN 48 HOURS &nbsp;|&nbsp; BROKERS REMOVED WITHIN 30 DAYS
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     THE EVIDENCE
+============================================================ -->
+<section id="evidence">
+  <div class="container">
+    <div class="evidence-header reveal">
+      <div class="section-label">EXHIBIT B</div>
+      <h2 class="section-title">THE EVIDENCE: BY THE NUMBERS</h2>
+      <p class="section-desc">
+        This isn't paranoia. These are documented facts from the FTC, EFF, and independent researchers.
+        Your information is being bought and sold thousands of times a year.
+      </p>
+    </div>
+
+    <div class="evidence-grid">
+
+      <!-- Left: Facts -->
+      <div class="evidence-col reveal reveal-delay-1">
+        <div class="evidence-col-label">DOCUMENTED FACTS / SOURCE: FTC + EFF</div>
+
+        <div class="fact-item">
+          <p>The data broker industry generates over <strong>$200 billion per year</strong> in revenue — more than the entire US intelligence budget.</p>
+          <div class="source">SOURCE: International Association of Privacy Professionals, 2024</div>
+        </div>
+
+        <div class="fact-item">
+          <p>There are over <strong>4,000 data broker companies</strong> operating in the United States alone. Most have zero consumer-facing presence.</p>
+          <div class="source">SOURCE: FTC Report on Data Brokers, 2024</div>
+        </div>
+
+        <div class="fact-item">
+          <p>The average American's data is sold to <strong>third parties 1,000+ times per year</strong> just from smartphone app activity.</p>
+          <div class="source">SOURCE: EFF, "Your Phone is a Spy," 2023</div>
+        </div>
+
+        <div class="fact-item">
+          <p>Only <strong>3 states</strong> have meaningful data broker opt-out laws. The remaining 47 have no obligation to remove your data.</p>
+          <div class="source">SOURCE: IAPP State Privacy Law Tracker, 2025</div>
+        </div>
+
+        <div class="fact-item">
+          <p>Opting out manually from all 484 known brokers would take approximately <strong>304 hours</strong> — over 7.5 full work weeks.</p>
+          <div class="source">SOURCE: Vanish Internal Research, 2026</div>
+        </div>
+      </div>
+
+      <!-- Center: Dossier -->
+      <div class="evidence-col reveal reveal-delay-2">
+        <div class="evidence-col-label">SAMPLE DOSSIER — ANY CITIZEN</div>
+
+        <div class="dossier-card">
+          <div style="position:relative; margin-bottom:16px; text-align:center;">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Subject photo" width="120" height="120" loading="lazy" style="width:120px; height:120px; object-fit:cover; object-position:top; display:inline-block; border:3px solid var(--black); filter:grayscale(60%) sepia(20%);">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-12deg); font-family:var(--font-mono); font-weight:700; font-size:1.1rem; letter-spacing:0.15em; color:var(--red); border:3px solid var(--red); padding:4px 12px; background:rgba(245,240,232,0.85); white-space:nowrap; pointer-events:none;">CLASSIFIED</div>
+          </div>
+          <div class="dossier-header">
+            PERSONAL FILE / RECORD #8847-B2 / COMPILED: AUTOMATED
+          </div>
+
+          <div class="dossier-row">
+            <span class="dossier-key">Full Name</span>
+            <span class="dossier-val redacted">[REDACTED]</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Age</span>
+            <span class="dossier-val">3<span style="background:#0A0A0A; color:transparent;">X</span></span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Current Address</span>
+            <span class="dossier-val redacted">████████████</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Previous Addresses</span>
+            <span class="dossier-val">7 found</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Relatives</span>
+            <span class="dossier-val">4 identified</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Employer</span>
+            <span class="dossier-val redacted">████████</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Est. Income</span>
+            <span class="dossier-val" style="color:var(--red);">VISIBLE</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Credit Score Range</span>
+            <span class="dossier-val" style="color:var(--red);">VISIBLE</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Tracked Purchases</span>
+            <span class="dossier-val" style="color:var(--red);">847 items</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Political Affiliation</span>
+            <span class="dossier-val" style="color:var(--red);">VISIBLE</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Health Indicators</span>
+            <span class="dossier-val" style="color:var(--red);">INFERRED</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-key">Brokers Holding File</span>
+            <span class="dossier-val" style="font-weight:700;">147</span>
+          </div>
+
+          <div class="dossier-stamp-wrap">
+            <div class="stamp stamp-sm">FOR SALE</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; font-family:var(--font-mono); font-size:0.65rem; color:#888; letter-spacing:0.08em;">
+          * Composite based on average American. All data categories are real. Red items are currently sold.
+        </div>
+      </div>
+
+      <!-- Right: Big stat -->
+      <div class="evidence-col reveal reveal-delay-3">
+        <div class="evidence-col-label">BY THE NUMBERS</div>
+
+        <div class="big-stat" style="margin-top:0; margin-bottom:16px;">
+          <div class="big-stat-num">3,000+</div>
+          <div class="big-stat-label">TIMES YOUR DATA WAS BOUGHT &amp; SOLD THIS YEAR</div>
+        </div>
+
+        <div class="big-stat" style="background: var(--red); border-color: var(--white);">
+          <div class="big-stat-num" style="color:var(--white);">$200B</div>
+          <div class="big-stat-label" style="color: rgba(255,255,255,0.7);">ANNUAL REVENUE OF DATA BROKER INDUSTRY</div>
+        </div>
+
+        <div class="big-stat" style="background:transparent; border-color:rgba(255,255,255,0.3); margin-top:16px;">
+          <div class="big-stat-num" style="color:var(--white);">4,000+</div>
+          <div class="big-stat-label" style="color:#888;">BROKER COMPANIES OPERATING IN THE US</div>
+        </div>
+
+        <div style="margin-top:24px; padding: 20px; border: 2px solid rgba(255,255,255,0.15);">
+          <p style="font-family:var(--font-serif); font-size:0.9rem; color:#aaa; line-height:1.6; font-style:italic;">
+            "The data broker industry has created a surveillance infrastructure that would be the envy of any authoritarian government — and it operates with near zero accountability."
+          </p>
+          <p style="font-family:var(--font-mono); font-size:0.65rem; color:#666; margin-top:8px; letter-spacing:0.08em;">
+            — SENATOR RON WYDEN, TESTIMONY BEFORE SENATE, 2023
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     METHODS OF COLLECTION
+============================================================ -->
+<section id="methods">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">EXHIBIT C &nbsp;—&nbsp; METHODS</div>
+      <h2 class="section-title">HOW THEY BUILT YOUR FILE</h2>
+      <p class="section-desc">
+        Four primary collection methods — each operating legally, in plain sight,
+        without your meaningful knowledge or consent.
+      </p>
+    </div>
+
+    <div class="methods-grid">
+
+      <div class="method-card reveal reveal-delay-1">
+        <div class="method-stamp">
+          <div class="stamp stamp-sm">STATUS: ACTIVE</div>
+        </div>
+        <div class="method-icon" style="width:60px; height:60px; overflow:hidden; padding:0;">
+          <img src="https://images.unsplash.com/photo-1589254065878-42c9da997008?w=120&q=70" alt="" width="60" height="60" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(40%);">
+        </div>
+        <div class="method-title">PUBLIC RECORDS</div>
+        <p class="method-desc">
+          Court documents, voter registration, property records, marriage/divorce filings,
+          business licenses, and DMV data. All legally obtained, freely aggregated.
+        </p>
+        <div style="font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; color:var(--red);">
+          SOURCES: Court systems, county recorders, state agencies
+        </div>
+      </div>
+
+      <div class="method-card reveal reveal-delay-2">
+        <div class="method-stamp">
+          <div class="stamp stamp-sm">STATUS: ACTIVE</div>
+        </div>
+        <div class="method-icon" style="width:60px; height:60px; overflow:hidden; padding:0;">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&q=70" alt="" width="60" height="60" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(40%);">
+        </div>
+        <div class="method-title">PURCHASE TRACKING</div>
+        <p class="method-desc">
+          Loyalty card programs, credit and debit transaction categorization, grocery purchase
+          patterns, and retailer data-sharing partnerships reveal exactly what you buy and when.
+        </p>
+        <div style="font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; color:var(--red);">
+          SOURCES: Retailers, card networks, loyalty programs
+        </div>
+      </div>
+
+      <div class="method-card reveal reveal-delay-3">
+        <div class="method-stamp">
+          <div class="stamp stamp-sm">STATUS: ACTIVE</div>
+        </div>
+        <div class="method-icon" style="width:60px; height:60px; overflow:hidden; padding:0;">
+          <img src="https://images.unsplash.com/photo-1533228876829-65c94e7b5025?w=120&q=70" alt="" width="60" height="60" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(40%);">
+        </div>
+        <div class="method-title">DIGITAL SURVEILLANCE</div>
+        <p class="method-desc">
+          Third-party cookies, tracking pixels, browser fingerprinting, app SDK data harvesting,
+          and location data sold by mobile apps build a continuous behavioral profile.
+        </p>
+        <div style="font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; color:var(--red);">
+          SOURCES: Ad tech, mobile SDKs, app publishers
+        </div>
+      </div>
+
+      <div class="method-card reveal reveal-delay-4">
+        <div class="method-stamp">
+          <div class="stamp stamp-sm">STATUS: ACTIVE</div>
+        </div>
+        <div class="method-icon" style="width:60px; height:60px; overflow:hidden; padding:0;">
+          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=120&q=70" alt="" width="60" height="60" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(40%);">
+        </div>
+        <div class="method-title">SOCIAL AGGREGATION</div>
+        <p class="method-desc">
+          Profile merging across social networks, forum posts, review sites, and professional
+          directories. AI models infer income, health, and political views from behavioral signals.
+        </p>
+        <div style="font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.08em; color:var(--red);">
+          SOURCES: Social platforms, review sites, public posts
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VIDEO
+============================================================ -->
+<section id="video-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:32px;">
+      <div class="video-label" style="justify-content:center;">EXHIBIT D &nbsp;—&nbsp; VIDEO EVIDENCE</div>
+      <div class="video-badge">PLAY EVIDENCE VIDEO</div>
+      <h2 class="video-headline">SEE EXACTLY HOW YOUR DATA IS SOLD IN REAL TIME</h2>
+    </div>
+
+    <div class="video-container reveal reveal-delay-1">
+      <iframe
+        src="https://www.youtube.com/embed/aHTF4MWBRUY"
+        title="How data brokers work — video evidence"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <p style="text-align:center; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color:#555; margin-top:16px; text-transform:uppercase;">
+      RUNTIME: ~8 MIN &nbsp;|&nbsp; SOURCE: DOCUMENTARY &nbsp;|&nbsp; CLASSIFICATION: PUBLIC
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW VANISH WORKS
+============================================================ -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">EXHIBIT E &nbsp;—&nbsp; REMEDY</div>
+      <h2 class="section-title">HOW VANISH REMOVES YOUR FILE</h2>
+      <p class="section-desc">
+        Four steps. Fully automated. No paperwork, no endless opt-out forms,
+        no spending your weekends fighting systems designed to exhaust you.
+      </p>
+    </div>
+
+    <div class="steps-track">
+
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">STEP 01</div>
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <div class="step-title">IDENTIFY</div>
+        <p class="step-desc">
+          We scan 484 data brokers to build a complete map of where your data currently exists.
+          Most people appear on 40–80 sites.
+        </p>
+      </div>
+
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">STEP 02</div>
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div class="step-title">DISPUTE</div>
+        <p class="step-desc">
+          We file legally required removal requests with each broker on your behalf —
+          using their own compliance workflows against them.
+        </p>
+      </div>
+
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num">STEP 03</div>
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            <line x1="10" y1="11" x2="10" y2="17"/>
+            <line x1="14" y1="11" x2="14" y2="17"/>
+          </svg>
+        </div>
+        <div class="step-title">REMOVE</div>
+        <p class="step-desc">
+          We confirm each deletion and document it. Your dashboard shows every removal
+          as it completes. Average: 311 removals per customer.
+        </p>
+      </div>
+
+      <div class="step-card reveal reveal-delay-4">
+        <div class="step-num">STEP 04</div>
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div class="step-title">MONITOR</div>
+        <p class="step-desc">
+          Brokers re-add data. We scan continuously and remove new appearances
+          before they spread. Ongoing protection, not a one-time fix.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS
+============================================================ -->
+<section id="stats">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label" style="color:var(--yellow);">
+        EXHIBIT F &nbsp;—&nbsp; CASE STATISTICS
+        <span style="flex:1; height:1px; background:var(--yellow); opacity:0.3; display:block; margin-left:8px;"></span>
+      </div>
+      <h2 class="section-title" style="color:var(--white);">THE NUMBERS DON'T LIE</h2>
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card reveal reveal-delay-1">
+        <div class="stat-num">484</div>
+        <div class="stat-label">Data Brokers Scanned</div>
+        <p class="stat-desc">We monitor more brokers than any competitor in the US market.</p>
+      </div>
+
+      <div class="stat-card reveal reveal-delay-2">
+        <div class="stat-num">311</div>
+        <div class="stat-label">Avg. Removals Per Customer</div>
+        <p class="stat-desc">Most customers appear on far more sites than they expected.</p>
+      </div>
+
+      <div class="stat-card reveal reveal-delay-3">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Removal Success Rate</div>
+        <p class="stat-desc">2% of brokers receive legal escalation when they refuse to comply.</p>
+      </div>
+
+      <div class="stat-card reveal reveal-delay-4">
+        <div class="stat-num">$4.5M</div>
+        <div class="stat-label">Avg. Identity Theft Cost</div>
+        <p class="stat-desc">Total financial and time impact of a serious identity theft case.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+============================================================ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">EXHIBIT G &nbsp;—&nbsp; WITNESS STATEMENTS</div>
+      <h2 class="section-title">FILED UNDER OATH</h2>
+      <p class="section-desc">Documented accounts from customers who used Vanish.</p>
+    </div>
+
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="testimonial-verified">
+          <div class="stamp stamp-sm" style="font-size:0.6rem; transform:rotate(5deg);">VERIFIED</div>
+        </div>
+        <span class="testimonial-quote-mark">"</span>
+        <p class="testimonial-text">
+          I searched my own name and found my home address, my mother's maiden name, and my
+          <span class="hl">estimated salary listed on 89 different websites.</span> Vanish removed
+          all of them in 28 days. I had no idea this was even happening.
+        </p>
+        <div class="testimonial-sig">
+          <span class="sig-name">Marcus T.</span>
+          <span class="sig-role">Software Engineer &nbsp;/&nbsp; San Francisco, CA</span>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="testimonial-verified">
+          <div class="stamp stamp-sm" style="font-size:0.6rem; transform:rotate(-6deg); color:var(--red); border-color:var(--red);">VERIFIED</div>
+        </div>
+        <span class="testimonial-quote-mark">"</span>
+        <p class="testimonial-text">
+          After leaving an abusive relationship, I was terrified my ex could find me.
+          <span class="hl">Vanish found 134 sites listing my new address within 3 months</span>
+          of moving. They removed every single one. This service isn't a luxury — it's safety.
+        </p>
+        <div class="testimonial-sig">
+          <span class="sig-name">Anonymous</span>
+          <span class="sig-role">DV Survivor &nbsp;/&nbsp; Identity Protected</span>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal reveal-delay-3">
+        <div class="testimonial-verified">
+          <div class="stamp stamp-sm" style="font-size:0.6rem; transform:rotate(8deg);">VERIFIED</div>
+        </div>
+        <span class="testimonial-quote-mark">"</span>
+        <p class="testimonial-text">
+          I'm a physician. Data brokers had my <span class="hl">home address, cell number, and
+          inferred health conditions</span> listed publicly. One patient had already shown up
+          at my house. Vanish cleaned it all and I sleep better now.
+        </p>
+        <div class="testimonial-sig">
+          <span class="sig-name">Dr. P.R.</span>
+          <span class="sig-role">Physician &nbsp;/&nbsp; Chicago, IL</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING
+============================================================ -->
+<section id="pricing">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">EXHIBIT H &nbsp;—&nbsp; TERMS OF ENGAGEMENT</div>
+      <h2 class="section-title">SELECT YOUR PROTECTION LEVEL</h2>
+      <p class="section-desc">
+        No long contracts. Cancel any time. All plans include the initial scan and first removal wave.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Basic -->
+      <div class="pricing-card reveal reveal-delay-1">
+        <div class="pricing-tier">BASIC</div>
+        <div class="pricing-price">$9</div>
+        <div class="pricing-period mono">/ MONTH BILLED ANNUALLY</div>
+        <div class="pricing-divider"></div>
+
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Scan 200 data brokers
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Initial removal wave
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Quarterly re-scans
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Email reports
+        </div>
+        <a href="/start?ref=evidence" class="pricing-cta">START BASIC</a>
+      </div>
+
+      <!-- Pro (Featured) -->
+      <div class="pricing-card featured reveal reveal-delay-2">
+        <div class="pricing-badge">MOST EFFECTIVE</div>
+        <div class="pricing-tier">PRO</div>
+        <div class="pricing-price" style="color:var(--yellow);">$19</div>
+        <div class="pricing-period mono">/ MONTH BILLED ANNUALLY</div>
+        <div class="pricing-divider"></div>
+
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Scan all 484 brokers
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Continuous monitoring
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Monthly removal waves
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Family coverage (up to 4)
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Legal escalation support
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Dashboard + detailed reports
+        </div>
+        <a href="/start?ref=evidence" class="pricing-cta">START PRO</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card reveal reveal-delay-3">
+        <div class="pricing-tier">ENTERPRISE</div>
+        <div class="pricing-price">$49</div>
+        <div class="pricing-period mono">/ MONTH BILLED ANNUALLY</div>
+        <div class="pricing-divider"></div>
+
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Everything in Pro
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Unlimited family members
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          Dedicated account manager
+        </div>
+        <div class="pricing-feature">
+          <span class="pricing-feature-icon">
+            <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1 4l2 2 4-4" stroke="#0A0A0A" stroke-width="1.5" fill="none"/></svg>
+          </span>
+          API access + webhooks
+        </div>
+        <a href="/start?ref=evidence" class="pricing-cta">CONTACT US</a>
+      </div>
+
+    </div>
+
+    <p style="font-family:var(--font-mono); font-size:0.65rem; color:var(--gray); margin-top:24px; letter-spacing:0.08em; text-align:center;">
+      FREE SCAN INCLUDED — NO CREDIT CARD REQUIRED &nbsp;|&nbsp; CANCEL ANYTIME &nbsp;|&nbsp; 30-DAY MONEY BACK GUARANTEE
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     EVIDENCE PHOTO
+============================================================ -->
+<section id="evidence-photo">
+  <div class="ep-wrap">
+    <img
+      src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&q=80"
+      alt="City surveillance infrastructure at night"
+      class="ep-img"
+      loading="lazy"
+    >
+    <div class="ep-overlay"></div>
+  </div>
+  <div class="ep-caption-bar">
+    Fig. 3 — Surveillance infrastructure in a typical metropolitan area &nbsp;|&nbsp; Date: Redacted &nbsp;|&nbsp; Classification: Public Record
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+============================================================ -->
+<section id="final-cta">
+  <div class="container">
+    <div class="final-case-num mono">CASE FILE #2026-VANISH &nbsp;|&nbsp; RULING:</div>
+
+    <h2 class="final-headline reveal">
+      THE VERDICT:<br>YOUR DATA<br>NEEDS TO DISAPPEAR.
+    </h2>
+
+    <div class="final-verdict mono reveal reveal-delay-1">FINDING: IMMEDIATE ACTION REQUIRED</div>
+
+    <p class="final-sub reveal reveal-delay-2">
+      Every day you wait, more brokers add your file.
+      More strangers buy it. More scammers use it.
+      The evidence is clear. The solution is here.
+    </p>
+
+    <div class="reveal reveal-delay-3">
+      <a href="#pricing" class="brutal-btn brutal-btn-red" style="font-size:1.1rem; padding:18px 40px;">
+        ERASE MY FILE NOW &rarr;
+      </a>
+    </div>
+
+    <div style="margin-top:24px; font-family:var(--font-mono); font-size:0.65rem; color:#444; letter-spacing:0.12em; text-transform:uppercase;" class="reveal reveal-delay-4">
+      FREE SCAN &nbsp;|&nbsp; NO CARD REQUIRED &nbsp;|&nbsp; RESULTS IN 48H
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">VANISH</div>
+      <div class="footer-links">
+        <a href="/start?ref=evidence">Privacy Policy</a>
+        <a href="/start?ref=evidence">Terms</a>
+        <a href="/start?ref=evidence">Legal</a>
+        <a href="/start?ref=evidence">Blog</a>
+        <a href="/start?ref=evidence">Contact</a>
+      </div>
+      <div class="footer-meta mono">
+        © 2026 VANISH, INC. &nbsp;|&nbsp; CASE FILE #2026-VANISH
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script>
+  // Intersection Observer for scroll reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => io.observe(el));
+
+  // Active nav tab on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navTabs = document.querySelectorAll('.nav-tab');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navTabs.forEach(t => t.classList.remove('active'));
+        const active = document.querySelector(`.nav-tab[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => navObserver.observe(s));
+
+  // Smooth reveal on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstReveal = document.querySelector('.reveal');
+    if (firstReveal) {
+      setTimeout(() => firstReveal.classList.add('visible'), 100);
+    }
+  });
+</script>
+
+<script>
+(function(){
+  var ref="evidence";
+  var p=new URLSearchParams(window.location.search);
+  var utm={ref:ref,utm_source:p.get("utm_source")||"",utm_medium:p.get("utm_medium")||"",utm_campaign:p.get("utm_campaign")||""};
+  try{sessionStorage.setItem("vanish_lp",JSON.stringify(utm));}catch(e){}
+  document.querySelectorAll('a[href*="/start"]').forEach(function(a){
+    var u=new URL(a.href,window.location.origin);
+    Object.keys(utm).forEach(function(k){if(utm[k])u.searchParams.set(k,utm[k]);});
+    a.href=u.toString();
+  });
+})();
+</script>
+</body>
+</html>

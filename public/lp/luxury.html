@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANISH — Dark Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #000000;
+    --warm-white: #FAF9F6;
+    --gold: #B8965A;
+    --gray: #2A2A2A;
+    --gold-dim: rgba(184,150,90,0.15);
+    --gold-border: rgba(184,150,90,0.4);
+    --font-serif: 'Libre Baskerville', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: auto; }
+
+  body {
+    background: var(--black);
+    color: var(--warm-white);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border 0.25s ease;
+    mix-blend-mode: difference;
+  }
+  #cursor.expanded {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    mix-blend-mode: normal;
+  }
+
+  /* ── THREE.JS CANVASES ── */
+  #hero-canvas, #final-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    padding: 0 2rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .hero-headline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--warm-white);
+    margin-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .hero-rule {
+    width: 100%;
+    max-width: 500px;
+    height: 1px;
+    background: var(--gold);
+    margin: 2rem auto;
+    transform-origin: left;
+    transform: scaleX(0);
+    opacity: 0.7;
+  }
+  .hero-sub {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    color: rgba(250,249,246,0.7);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .hero-btns {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    margin-top: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .btn-gold {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 2.4rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    background: transparent;
+    cursor: none;
+    transition: background 0.3s, color 0.3s;
+    text-decoration: none;
+  }
+  .btn-gold:hover { background: var(--gold); color: var(--black); }
+  .btn-ghost {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 2.4rem;
+    border: 1px solid rgba(250,249,246,0.2);
+    color: rgba(250,249,246,0.5);
+    background: transparent;
+    cursor: none;
+    transition: border-color 0.3s, color 0.3s;
+    text-decoration: none;
+  }
+  .btn-ghost:hover { border-color: rgba(250,249,246,0.5); color: var(--warm-white); }
+
+  /* ── PROBLEM ── */
+  #problem {
+    height: 300vh;
+    background: var(--black);
+  }
+  #problem-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .problem-statement {
+    position: absolute;
+    text-align: center;
+    padding: 0 2rem;
+    max-width: 900px;
+    opacity: 0;
+  }
+  .problem-statement p {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-weight: 400;
+    color: var(--warm-white);
+    line-height: 1.3;
+  }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 8rem 2rem; }
+
+  .section-label {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .section-label::after {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  /* ── DATA CATEGORIES ── */
+  #categories {
+    background: var(--black);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .category-item {
+    padding: 3rem 2.5rem;
+    border-top: 1px solid rgba(250,249,246,0.06);
+    border-right: 1px solid rgba(250,249,246,0.06);
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  .category-item:nth-child(3n) { border-right: none; }
+  .category-num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 3.5rem;
+    color: rgba(184,150,90,0.2);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .category-rule {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .category-name {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    margin-bottom: 0.8rem;
+  }
+  .category-desc {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: rgba(250,249,246,0.45);
+    line-height: 1.7;
+  }
+
+  /* ── VIDEO ── */
+  #video-section {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6rem 2rem;
+  }
+  .video-wrap {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+    clip-path: inset(0 100% 0 0);
+  }
+  .video-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--gold-border);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* ── PROCESS ── */
+  #process {
+    background: var(--black);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+  }
+  .process-step {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .process-num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 5rem;
+    color: rgba(184,150,90,0.18);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .process-sep {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .process-title {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--warm-white);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .process-desc {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.875rem;
+    color: rgba(250,249,246,0.5);
+    line-height: 1.75;
+  }
+
+  /* ── STATEMENT ── */
+  #statement {
+    height: 100vh;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 2rem;
+  }
+  .statement-inner {
+    max-width: 1000px;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .statement-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(2rem, 5vw, 5rem);
+    font-weight: 400;
+    color: var(--warm-white);
+    line-height: 1.2;
+  }
+  .statement-underline {
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    margin: 2rem auto 0;
+    max-width: 500px;
+  }
+
+  /* ── STATS ── */
+  #stats {
+    background: var(--black);
+    border-top: 1px solid rgba(250,249,246,0.06);
+    border-bottom: 1px solid rgba(250,249,246,0.06);
+    max-width: 100%;
+    padding: 6rem 4rem;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 0;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 2rem;
+    border-right: 1px solid rgba(250,249,246,0.06);
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    color: var(--warm-white);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .stat-num span { color: var(--gold); }
+  .stat-label {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials {
+    background: var(--black);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+  }
+  .testimonial {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(184,150,90,0.3);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .testimonial-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(250,249,246,0.85);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .testimonial-author {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ── PRICING ── */
+  #pricing {
+    background: var(--black);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .pricing-card {
+    background: var(--gray);
+    padding: 3rem 2.5rem;
+    border: 1px solid rgba(250,249,246,0.05);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: border-color 0.3s;
+  }
+  .pricing-card.featured {
+    border: 1px solid var(--gold);
+    background: #111;
+    position: relative;
+  }
+  .pricing-badge {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--black);
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+  }
+  .pricing-tier {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .pricing-price {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 3rem;
+    color: var(--warm-white);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .pricing-price .currency {
+    font-size: 1.2rem;
+    color: var(--gold);
+    vertical-align: top;
+    margin-top: 0.4rem;
+    display: inline-block;
+  }
+  .pricing-period {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: rgba(250,249,246,0.4);
+    margin-bottom: 2rem;
+  }
+  .pricing-rule {
+    width: 100%;
+    height: 1px;
+    background: rgba(250,249,246,0.08);
+    margin-bottom: 2rem;
+  }
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 2.5rem;
+  }
+  .pricing-features li {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.875rem;
+    color: rgba(250,249,246,0.6);
+    padding: 0.6rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border-bottom: 1px solid rgba(250,249,246,0.04);
+  }
+  .pricing-features li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+  .btn-pricing {
+    display: block;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem;
+    border: 1px solid rgba(250,249,246,0.2);
+    color: rgba(250,249,246,0.6);
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .pricing-card.featured .btn-pricing {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .btn-pricing:hover, .pricing-card.featured .btn-pricing:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--black);
+  }
+
+  /* ── FINAL CTA ── */
+  #final {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+  }
+  .final-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 2rem;
+  }
+  .final-headline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(6rem, 15vw, 14rem);
+    font-weight: 400;
+    color: var(--warm-white);
+    line-height: 0.9;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  .final-cta-btn {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1.2rem 3rem;
+    background: var(--gold);
+    color: var(--black);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(20px);
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .final-cta-btn:hover { background: #d4aa6a; }
+  .final-note {
+    margin-top: 2rem;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: rgba(250,249,246,0.35);
+    letter-spacing: 0.05em;
+    opacity: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(250,249,246,0.06);
+    padding: 3rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: rgba(250,249,246,0.35);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ── CATEGORY THUMBNAILS ── */
+  .cat-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 1rem;
+    filter: grayscale(80%) brightness(0.4);
+    border: 1px solid var(--gold-border);
+  }
+
+  /* ── STATEMENT BG IMG ── */
+  #statement { position: relative; overflow: hidden; }
+  .statement-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .statement-inner { position: relative; z-index: 1; }
+
+  /* ── FOR WHOM ── */
+  .for-whom-title {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 400;
+    color: var(--warm-white);
+    margin-bottom: 4rem;
+    line-height: 1.2;
+  }
+  .for-whom-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .for-whom-card {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .for-whom-img-wrap {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    border: 1px solid var(--gold-border);
+  }
+  .for-whom-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(20%) brightness(0.7);
+    transition: filter 0.5s, transform 0.5s;
+  }
+  .for-whom-card:hover .for-whom-img {
+    filter: sepia(30%) brightness(0.8);
+    transform: scale(1.03);
+  }
+  .for-whom-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+  }
+  .for-whom-label {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  /* ── TESTIMONIAL AVATAR ── */
+  .testimonial-author-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .testi-avatar-gold {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    filter: sepia(30%);
+    border: 1px solid var(--gold-border);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .for-whom-grid { grid-template-columns: 1fr; }
+    .for-whom-img-wrap { height: 220px; }
+  }
+    .categories-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; gap: 2rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; align-items: center; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    body { cursor: auto; }
+    #cursor { display: none; }
+    .category-item:nth-child(3n) { border-right: 1px solid rgba(250,249,246,0.06); }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(250,249,246,0.06); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor"></div>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. 2026 · Privacy Protection</div>
+    <h1 class="hero-headline">Your digital self<br>is everywhere.</h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">VANISH removes your personal information from 484 data brokers — automatically.</p>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn-gold">Begin Your Removal</a>
+      <a href="#problem" class="btn-ghost">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     THE PROBLEM
+══════════════════════════════════════ -->
+<section id="problem">
+  <div id="problem-sticky">
+    <div class="problem-statement" id="ps1">
+      <p>In 2026, your personal data is listed on 484 databases.</p>
+    </div>
+    <div class="problem-statement" id="ps2">
+      <p>They update your profile automatically.</p>
+    </div>
+    <div class="problem-statement" id="ps3">
+      <p>And sell it to anyone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     DATA CATEGORIES
+══════════════════════════════════════ -->
+<div id="categories" style="padding: 6rem 2rem;">
+  <div class="section-label">What they hold on you</div>
+  <div class="categories-grid">
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1920&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">01</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Home Address</div>
+      <p class="category-desc">Current and historical residences mapped to satellite imagery and sold to anyone willing to pay $4.99.</p>
+    </div>
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">02</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Financial History</div>
+      <p class="category-desc">Income estimates, asset valuations, and spending patterns aggregated from public and private records.</p>
+    </div>
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1920&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">03</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Family Relationships</div>
+      <p class="category-desc">Parents, siblings, spouses, and children — all indexed and linked in social graphs.</p>
+    </div>
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">04</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Employment Records</div>
+      <p class="category-desc">Current employer, career history, estimated salary, and professional associations.</p>
+    </div>
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">05</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Digital Footprint</div>
+      <p class="category-desc">Email addresses, usernames, phone numbers, and platform accounts aggregated across decades.</p>
+    </div>
+    <div class="category-item">
+      <img src="https://images.unsplash.com/photo-1558491957-6a0f9f753a2d?w=1200&q=80" alt="" class="cat-thumb" aria-hidden="true">
+      <div class="category-num">06</div>
+      <div class="category-rule"></div>
+      <div class="category-name">Behavioral Profiles</div>
+      <p class="category-desc">Purchase intent, political affiliation, health indicators, and psychological models built without your knowledge.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIDEO
+══════════════════════════════════════ -->
+<section id="video-section">
+  <div class="section-label" style="justify-content: center;">See VANISH in action</div>
+  <div class="video-wrap">
+    <iframe
+      src="https://www.youtube.com/embed/aHTF4MWBRUY?rel=0&modestbranding=1&color=white"
+      title="VANISH — Privacy Protection"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PROCESS
+══════════════════════════════════════ -->
+<div id="process" style="padding: 8rem 2rem;">
+  <div class="section-label">How it works</div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="process-num">I</div>
+      <div class="process-sep"></div>
+      <div class="process-title">Scan</div>
+      <p class="process-desc">We search all 484 known data broker databases for your personal information within minutes of signup.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">II</div>
+      <div class="process-sep"></div>
+      <div class="process-title">Remove</div>
+      <p class="process-desc">Automated opt-out requests are submitted to every broker holding your data, handled on your behalf.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-num">III</div>
+      <div class="process-sep"></div>
+      <div class="process-title">Monitor</div>
+      <p class="process-desc">We continuously watch for re-listing and re-submit removal requests every 30 days, indefinitely.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FOR WHOM
+══════════════════════════════════════ -->
+<section id="for-whom" style="padding: 8rem 2rem; background: var(--black); max-width: 1200px; margin: 0 auto;">
+  <div class="section-label">Who We Serve</div>
+  <h2 class="for-whom-title">Discretion for those who know<br><em>its value.</em></h2>
+  <div class="for-whom-grid">
+    <div class="for-whom-card">
+      <div class="for-whom-img-wrap">
+        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Executive" class="for-whom-img">
+        <div class="for-whom-img-overlay"></div>
+      </div>
+      <div class="for-whom-label">Executives</div>
+    </div>
+    <div class="for-whom-card">
+      <div class="for-whom-img-wrap">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Entrepreneur" class="for-whom-img">
+        <div class="for-whom-img-overlay"></div>
+      </div>
+      <div class="for-whom-label">Entrepreneurs</div>
+    </div>
+    <div class="for-whom-card">
+      <div class="for-whom-img-wrap">
+        <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400&q=80" alt="Professional" class="for-whom-img">
+        <div class="for-whom-img-overlay"></div>
+      </div>
+      <div class="for-whom-label">Professionals</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STATEMENT
+══════════════════════════════════════ -->
+<section id="statement">
+  <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80" alt="" class="statement-bg-img" aria-hidden="true">
+  <div class="statement-inner">
+    <p class="statement-text">"Privacy is the most sophisticated form of power."</p>
+    <div class="statement-underline"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STATS
+══════════════════════════════════════ -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="484">0</span></div>
+      <div class="stat-label">Data Brokers Covered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="48">0</span><span>h</span></div>
+      <div class="stat-label">First Removals Begin</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="94">0</span><span>%</span></div>
+      <div class="stat-label">Removal Success Rate</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="30">0</span><span>d</span></div>
+      <div class="stat-label">Monitoring Cycle</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════ -->
+<div id="testimonials" style="padding: 8rem 2rem;">
+  <div class="section-label">What clients say</div>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <p class="testimonial-quote">"Within a week my address was gone from every site I'd searched. VANISH does what it promises — invisibly."</p>
+      <div class="testimonial-author-row">
+        <img src="https://picsum.photos/seed/alice/112/112" alt="Michael R." class="testi-avatar-gold">
+        <span class="testimonial-author">— Michael R., Attorney · New York</span>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"I searched my name before and after. The difference is remarkable. This is the kind of privacy I thought was impossible."</p>
+      <div class="testimonial-author-row">
+        <img src="https://picsum.photos/seed/bob/112/112" alt="Sarah K." class="testi-avatar-gold">
+        <span class="testimonial-author">— Sarah K., Executive · San Francisco</span>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"VANISH runs in the background and handles everything. I've stopped worrying about stalker risk entirely."</p>
+      <div class="testimonial-author-row">
+        <img src="https://picsum.photos/seed/carol/112/112" alt="James L." class="testi-avatar-gold">
+        <span class="testimonial-author">— James L., Public Figure · Chicago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRICING
+══════════════════════════════════════ -->
+<div id="pricing" style="padding: 8rem 2rem;">
+  <div class="section-label">Choose your protection</div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Essential</div>
+      <div class="pricing-price"><span class="currency">$</span>9</div>
+      <div class="pricing-period">per month, billed annually</div>
+      <div class="pricing-rule"></div>
+      <ul class="pricing-features">
+        <li>100 data brokers covered</li>
+        <li>Quarterly monitoring</li>
+        <li>Email reports</li>
+        <li>Standard support</li>
+      </ul>
+      <a href="/start?ref=luxury" class="btn-pricing">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-tier">Professional</div>
+      <div class="pricing-price"><span class="currency">$</span>19</div>
+      <div class="pricing-period">per month, billed annually</div>
+      <div class="pricing-rule"></div>
+      <ul class="pricing-features">
+        <li>484 data brokers covered</li>
+        <li>Monthly monitoring</li>
+        <li>Real-time dashboard</li>
+        <li>Priority support</li>
+        <li>Family add-on available</li>
+      </ul>
+      <a href="/start?ref=luxury" class="btn-pricing">Begin Removal</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Private</div>
+      <div class="pricing-price"><span class="currency">$</span>49</div>
+      <div class="pricing-period">per month, billed annually</div>
+      <div class="pricing-rule"></div>
+      <ul class="pricing-features">
+        <li>484+ brokers + dark web</li>
+        <li>Weekly monitoring</li>
+        <li>Dedicated analyst</li>
+        <li>Concierge support</li>
+        <li>3 family members included</li>
+      </ul>
+      <a href="/start?ref=luxury" class="btn-pricing">Contact Sales</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FINAL CTA
+══════════════════════════════════════ -->
+<section id="final">
+  <canvas id="final-canvas"></canvas>
+  <div class="final-content">
+    <div class="final-headline">Begin.</div>
+    <a href="#pricing" class="final-cta-btn">Disappear From The Internet</a>
+    <p class="final-note">No long-term contract &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; Results within 7 days</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">VANISH</div>
+  <ul class="footer-links">
+    <li><a href="/start?ref=luxury">Privacy</a></li>
+    <li><a href="/start?ref=luxury">Terms</a></li>
+    <li><a href="/start?ref=luxury">Contact</a></li>
+    <li><a href="/start?ref=luxury">Blog</a></li>
+  </ul>
+  <div style="font-family: var(--font-sans); font-size: 0.7rem; color: rgba(250,249,246,0.2); letter-spacing: 0.05em;">© 2026 VANISH</div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const isMobile = window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent);
+
+  /* ── CUSTOM CURSOR ── */
+  const cursor = document.getElementById('cursor');
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let curX = mouseX, curY = mouseY;
+
+  if (!isMobile) {
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    document.querySelectorAll('a, button, .btn-gold, .btn-ghost, .btn-pricing, .final-cta-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+    });
+
+    function animateCursor() {
+      curX += (mouseX - curX) * 0.12;
+      curY += (mouseY - curY) * 0.12;
+      cursor.style.left = curX + 'px';
+      cursor.style.top = curY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+  }
+
+  /* ── THREE.JS STAR FIELD FACTORY ── */
+  function createStarField(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(canvas.offsetWidth || window.innerWidth, canvas.offsetHeight || window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / (canvas.offsetHeight || window.innerHeight), 0.1, 100);
+    camera.position.z = 5;
+
+    const count = isMobile ? 1500 : 5000;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+
+    for (let i = 0; i < count * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 20;
+    }
+
+    for (let i = 0; i < count; i++) {
+      if (Math.random() > 0.85) {
+        // Gold particles
+        colors[i * 3]     = 0.72;
+        colors[i * 3 + 1] = 0.59;
+        colors[i * 3 + 2] = 0.35;
+      } else {
+        // Dim white particles
+        const v = Math.random() * 0.5 + 0.3;
+        colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = v;
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.025,
+      vertexColors: true,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.85,
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    let targetX = 0, targetY = 0;
+
+    if (canvasId === 'hero-canvas') {
+      document.addEventListener('mousemove', e => {
+        targetX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+        targetY = -(e.clientY / window.innerHeight - 0.5) * 0.4;
+      });
+    }
+
+    function resize() {
+      const parent = canvas.parentElement;
+      const w = parent.offsetWidth;
+      const h = parent.offsetHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      particles.rotation.y += 0.0002;
+      particles.rotation.x += 0.0001;
+      if (!isMobile) {
+        camera.position.x += (targetX - camera.position.x) * 0.02;
+        camera.position.y += (targetY - camera.position.y) * 0.02;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    return { scene, camera, particles };
+  }
+
+  /* ── INIT THREE.JS ── */
+  const heroField = createStarField('hero-canvas');
+  const finalField = createStarField('final-canvas');
+
+  /* ── GSAP SETUP ── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── HERO ENTRANCE TIMELINE ── */
+  const heroTl = gsap.timeline({ delay: 0.2 });
+
+  heroTl
+    .to('.hero-eyebrow', {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.3
+    })
+    .to('.hero-headline', {
+      opacity: 1, y: 0, duration: 1.0, ease: 'power3.out'
+    }, '-=0.4')
+    .to('.hero-rule', {
+      opacity: 0.7, scaleX: 1, duration: 1.5, ease: 'power3.inOut'
+    }, '-=0.6')
+    .to('.hero-sub', {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out'
+    }, '-=1.0')
+    .to('.hero-btns', {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out'
+    }, '-=0.6');
+
+  /* ── PROBLEM SCROLLYTELLING ── */
+  const statements = ['#ps1', '#ps2', '#ps3'];
+  const problemTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#problem',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: false,
+      pin: '#problem-sticky',
+      snap: {
+        snapTo: [0, 0.33, 0.66, 1],
+        duration: 0.6,
+        ease: 'power2.inOut'
+      }
+    }
+  });
+
+  statements.forEach((sel, i) => {
+    const progress = i / (statements.length - 1);
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: '#problem',
+        start: `${i * 33.3}% top`,
+        end: `${(i + 1) * 33.3}% top`,
+        toggleActions: 'play reverse play reverse',
+      }
+    })
+    .fromTo(sel,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+    )
+    .to(sel,
+      { opacity: 0, y: -30, duration: 0.5, ease: 'power3.in' },
+      '+=0.3'
+    );
+  });
+
+  /* ── CATEGORIES STAGGER ── */
+  gsap.from('.category-item', {
+    scrollTrigger: {
+      trigger: '.categories-grid',
+      start: 'top 80%',
+    },
+    opacity: 0, y: 40,
+    duration: 0.7,
+    ease: 'power3.out',
+    stagger: 0.1
+  });
+
+  /* ── VIDEO CLIP-PATH WIPE ── */
+  gsap.to('.video-wrap', {
+    scrollTrigger: {
+      trigger: '#video-section',
+      start: 'top 75%',
+      toggleActions: 'play none none none'
+    },
+    clipPath: 'inset(0 0% 0 0)',
+    duration: 1.2,
+    ease: 'power3.inOut'
+  });
+
+  /* ── PROCESS STAGGER ── */
+  gsap.from('.process-step', {
+    scrollTrigger: {
+      trigger: '.process-steps',
+      start: 'top 80%',
+    },
+    opacity: 0, y: 30,
+    duration: 0.8,
+    ease: 'power3.out',
+    stagger: 0.2
+  });
+
+  /* ── STATEMENT ── */
+  const stmtTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#statement',
+      start: 'top 60%',
+    }
+  });
+  stmtTl
+    .to('.statement-inner', { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' })
+    .to('.statement-underline', { width: '500px', duration: 1.2, ease: 'power3.inOut' }, '-=0.4');
+
+  /* ── STATS COUNTUP ── */
+  gsap.from('.stat-item', {
+    scrollTrigger: {
+      trigger: '#stats',
+      start: 'top 80%',
+    },
+    opacity: 0, y: 20,
+    duration: 0.6,
+    ease: 'power3.out',
+    stagger: 0.1
+  });
+
+  ScrollTrigger.create({
+    trigger: '#stats',
+    start: 'top 75%',
+    once: true,
+    onEnter: () => {
+      document.querySelectorAll('.count').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        gsap.fromTo(el,
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 2.0,
+            ease: 'power2.out',
+            snap: { innerText: 1 },
+            onUpdate: function() {
+              el.innerText = Math.round(parseFloat(el.innerText));
+            }
+          }
+        );
+      });
+    }
+  });
+
+  /* ── TESTIMONIALS ── */
+  gsap.from('.testimonial', {
+    scrollTrigger: {
+      trigger: '.testimonials-grid',
+      start: 'top 80%',
+    },
+    opacity: 0, y: 30,
+    duration: 0.8,
+    ease: 'power3.out',
+    stagger: 0.2
+  });
+
+  /* ── PRICING ── */
+  gsap.from('.pricing-card', {
+    scrollTrigger: {
+      trigger: '.pricing-grid',
+      start: 'top 80%',
+    },
+    opacity: 0, y: 30,
+    duration: 0.8,
+    ease: 'power3.out',
+    stagger: 0.15
+  });
+
+  /* ── FOR WHOM CARDS ── */
+  gsap.from('.for-whom-card', {
+    scrollTrigger: {
+      trigger: '#for-whom',
+      start: 'top 80%',
+    },
+    opacity: 0,
+    y: 30,
+    duration: 0.8,
+    ease: 'power3.out',
+    stagger: 0.2
+  });
+
+  /* ── FINAL CTA ── */
+  const finalTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#final',
+      start: 'top 60%',
+    }
+  });
+  finalTl
+    .to('.final-headline', { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' })
+    .to('.final-cta-btn', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.3')
+    .to('.final-note', { opacity: 1, duration: 0.7, ease: 'power3.out' }, '-=0.2');
+
+  /* ── SCROLL PARTICLE EFFECT (hero) ── */
+  if (heroField && !isMobile) {
+    ScrollTrigger.create({
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+      onUpdate: self => {
+        const prog = self.progress;
+        heroField.particles.material.opacity = 0.85 - prog * 0.6;
+        heroField.particles.scale.set(1 + prog * 0.3, 1 + prog * 0.3, 1 + prog * 0.3);
+      }
+    });
+  }
+
+})();
+</script>
+<script>
+(function(){
+  var ref="luxury";
+  var p=new URLSearchParams(window.location.search);
+  var utm={ref:ref,utm_source:p.get("utm_source")||"",utm_medium:p.get("utm_medium")||"",utm_campaign:p.get("utm_campaign")||""};
+  try{sessionStorage.setItem("vanish_lp",JSON.stringify(utm));}catch(e){}
+  document.querySelectorAll('a[href*="/start"]').forEach(function(a){
+    var u=new URL(a.href,window.location.origin);
+    Object.keys(utm).forEach(function(k){if(utm[k])u.searchParams.set(k,utm[k]);});
+    a.href=u.toString();
+  });
+})();
+</script>
+</body>
+</html>
